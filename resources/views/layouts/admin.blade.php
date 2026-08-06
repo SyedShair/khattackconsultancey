@@ -38,12 +38,7 @@
 
             <ul class="navbar-nav ms-auto align-items-center">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="#" data-lte-toggle="dark-mode">
-                        <i class="bi bi-sun-fill"></i>
-                    </a>
-                </li>
-
+               
                 @auth
                    <li class="nav-item dropdown user-menu">
     <a href="#"
@@ -124,7 +119,6 @@
 
            <img src="{{ asset('storage/' . $appSetting->logo ?? asset('adminlte/img/AdminLTELogo.png') ) }}"
                 class="brand-image opacity-75 shadow" alt="Logo">
-           <span class="brand-text fw-light">{{ $appSetting->app_name ?? config('app.name') }}</span>
        </a>
         </div>
 
@@ -188,8 +182,53 @@
                                     <p>Settings</p>
                                 </a>
                             </li>
-
-
+ <li class="nav-header">RECRUITMENT</li>
+ 
+                    <li class="nav-item has-treeview {{ request()->is('admin/vacancies*', 'admin/applications*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->is('admin/vacancies*', 'admin/applications*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-briefcase"></i>
+                            <p>
+                                Careers
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+ 
+                            <li class="nav-item">
+                                <a href="{{ url('/admin/vacancies') }}"
+                                   class="nav-link {{ request()->is('admin/vacancies*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-list-check"></i>
+                                    <p>Vacancies</p>
+                                </a>
+                            </li>
+ 
+                            <li class="nav-item">
+                                <a href="{{ url('/admin/applications') }}"
+                                   class="nav-link {{ request()->is('admin/applications*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-person-lines-fill"></i>
+                                    <p>Applications</p>
+                                </a>
+                            </li>
+ 
+                        </ul>
+                    </li>
+   <li class="nav-header">WEBSITE CONTENT</li>
+ 
+                    <li class="nav-item">
+                        <a href="{{ url('/admin/hero-slides') }}"
+                           class="nav-link {{ request()->is('admin/hero-slides*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-images"></i>
+                            <p>Hero Slides</p>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a href="{{ url('/admin/services') }}"
+                           class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-grid-3x3-gap"></i>
+                            <p>Services</p>
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>

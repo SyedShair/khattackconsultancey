@@ -12,9 +12,12 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-4">
+@php 
+$settings = \App\Models\Setting::first();
 
+@endphp
             <div class="text-center mb-4">
-                <h1 class="fw-light">{{ config('app.name') }}</h1>
+                <h1 class="fw-light">{{ $settings->app_name }}</h1>
             </div>
 
             <div class="card">

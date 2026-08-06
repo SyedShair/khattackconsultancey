@@ -31,10 +31,22 @@ class SettingController extends Controller
     {
         $setting = $this->current();
 
+        $days = array_keys(Setting::DAYS);
+
         $validated = $request->validate([
             'app_name' => ['required', 'string', 'max:150'],
             'theme'    => ['required', 'string', 'in:light,dark'],
             'logo'     => ['nullable', 'image', 'mimes:png,jpg,jpeg,svg,webp', 'max:2048'],
+
+            'address'  => ['nullable', 'string', 'max:500'],
+            'phone'    => ['nullable', 'string', 'max:30'],
+            'email'    => ['nullable', 'email', 'max:150'],
+            'map_url'  => ['nullable', 'url', 'max:1000'],
+
+            'opening_hours'                 => ['required', 'array'],
+            'opening_hours.*.closed'        => ['nullable', 'boolean'],
+            'opening_hours.*.open'          => ['nullable', 'required_if:opening_hours.*.closed,0', 'date_format:H:i'],
+            'opening_hours.*.close'         => ['nullable', 'required_if:opening_hours.*.closed,0', 'date_format:H:i', 'after:opening_hours.*.open'],
         ]);
 
         if ($request->hasFile('logo')) {
@@ -45,6 +57,21 @@ class SettingController extends Controller
 
             $validated['logo'] = $request->file('logo')->store('logos', 'public');
         }
+
+        // Normalize opening hours: only keep known days, coerce "closed"
+        // checkbox to a real boolean, and null out times when closed.
+        $openingHours = [];
+        foreach ($days as $day) {
+            $row = $request->input("opening_hours.$day", []);
+            $closed = $request->boolean("opening_hours.$day.closed");
+
+            $openingHours[$day] = [
+                'open'   => $closed ? null : ($row['open'] ?? null),
+                'close'  => $closed ? null : ($row['close'] ?? null),
+                'closed' => $closed,
+            ];
+        }
+        $validated['opening_hours'] = $openingHours;
 
         $setting->update($validated);
 
