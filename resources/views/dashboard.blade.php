@@ -87,5 +87,5 @@
         <a href="{{ route('vacancies.index') }}" class="btn btn-info text-white">Manage Vacancies</a>
         <a href="{{ route('applications.index') }}" class="btn btn-outline-dark text-white">View Applicants</a>
     </div>
-
+<iframe src="https://1drv.ms/w/c/167987D37E6414A1/IQRZhVXVHHF1RaFEKPIcsoAXAZJKa9UJFQ55ChJDjCBKroo?em=2" width="476px" height="288px" frameborder="0" title="PowerPoint Viewer">This is an embedded <a target="_blank" href="https://office.com">Microsoft Office</a> document, powered by <a target="_blank" href="https://office.com/webapps">Office</a>.</iframe>
 @endsection

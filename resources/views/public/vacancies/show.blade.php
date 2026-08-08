@@ -2,9 +2,14 @@
 
 @section('title', $vacancy->title . ' | Careers | ' . ($appSetting->app_name ?? config('app.name')))
 
+@section('page_banner')
+    <h1>{{ $vacancy->title }}</h1>
+    <p>{{ $vacancy->department ?? 'Careers' }} @if($vacancy->location) &middot; {{ $vacancy->location }} @endif</p>
+@endsection
+
 @section('content')
 
-<div class="service sp_bottom_140 special__spacing inner__page__spacing" id="tb__vacancy__page">
+<div class="service sp_bottom_140 special__spacing sp_top_160" id="tb__vacancy__page">
     <div class="container">
 
         <a href="{{ route('vacancies.public.index') }}" class="d-inline-block mb-4 text-decoration-none back-link">
@@ -45,11 +50,11 @@
                 @endif
 
                 <h5 class="mt-4">Job Description</h5>
-                <div class="mb-4 job-body" style="white-space: pre-line;">{{ $vacancy->description }}</div>
+                <div class="mb-4 job-body">{!! $vacancy->description !!}</div>
 
                 @if($vacancy->requirements)
                     <h5>Requirements</h5>
-                    <div class="job-body" style="white-space: pre-line;">{{ $vacancy->requirements }}</div>
+                    <div class="job-body">{!! $vacancy->requirements !!}</div>
                 @endif
             </div>
 
@@ -160,7 +165,7 @@
         margin: 0 8px 8px 0;
     }
     .job-meta__pill--accent {
-        background: linear-gradient(90deg, #00229E, #6E1299, #FE0094);
+        background: linear-gradient(90deg, #3E5B54, #4F6B63, #607570);
         color: #fff;
     }
     .job-body { color: #46435A; line-height: 1.8; }
@@ -176,7 +181,7 @@
     }
     .apply-card__accent {
         height: 6px;
-        background: linear-gradient(90deg, #00229E, #6E1299, #FE0094);
+        background: linear-gradient(90deg, #3E5B54, #4F6B63, #607570);
     }
     .apply-card__body { padding: 32px; }
     .apply-card__header { display: flex; align-items: center; gap: 14px; }
@@ -188,7 +193,7 @@
         height: 46px;
         min-width: 46px;
         border-radius: 14px;
-        background: linear-gradient(135deg, #00229E, #FE0094);
+        background: linear-gradient(135deg, #3E5B54, #607570);
         color: #fff;
         font-size: 18px;
     }
@@ -222,9 +227,9 @@
     }
     .apply-input:focus, .apply-textarea:focus {
         outline: none;
-        border-color: #6E1299;
+        border-color: #4F6B63;
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(110, 18, 153, 0.08);
+        box-shadow: 0 0 0 4px rgba(79, 107, 99, 0.08);
     }
     .apply-textarea {
         width: 100%;
@@ -249,8 +254,8 @@
         transition: border-color .15s ease, background .15s ease;
     }
     .apply-dropzone:hover {
-        border-color: #6E1299;
-        background: #F8F6FC;
+        border-color: #4F6B63;
+        background: #F7F9F8;
     }
     .apply-dropzone--filled {
         border-style: solid;
@@ -259,7 +264,7 @@
     }
     .apply-dropzone__icon {
         font-size: 22px;
-        color: #6E1299;
+        color: #4F6B63;
     }
     .apply-dropzone__text { font-size: 14px; color: #46435A; line-height: 1.5; }
     .apply-dropzone__input { display: none; }
@@ -272,7 +277,7 @@
         font-weight: 700;
         letter-spacing: .5px;
         color: #fff;
-        background: linear-gradient(90deg, #00229E, #6E1299, #FE0094);
+        background: linear-gradient(90deg, #3E5B54, #4F6B63, #607570);
         background-size: 200% auto;
         transition: background-position .4s ease, transform .1s ease;
     }

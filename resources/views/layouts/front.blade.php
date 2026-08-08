@@ -25,13 +25,22 @@
         /* Inner pages (no hero image behind the header) need a solid,
            high-contrast header — the theme's default transparent header
            only reads correctly over the dark hero banner on the homepage. */
-        /* .headerarea__solid {
+        .headerarea__solid {
             background: #ffffff;
             box-shadow: 0 2px 16px rgba(10, 6, 36, 0.08);
-        } */
-        .headerarea__main__menu nav ul li a,
-        .mobile__log--title {
+        }
+
+        /* Nav text is white ONLY while the header is in its transparent
+           state (sitting over the dark hero/banner). Solid and scrolled
+           states override this to dark further down — this fixes the
+           "menu disappears" bug that comes from forcing white globally. */
+        .headerarea__transparent .headerarea__main__menu nav ul li a,
+        .headerarea__transparent .mobile__log--title {
             color: #ffffff !important;
+        }
+        .headerarea__solid .headerarea__main__menu nav ul li a,
+        .headerarea__solid .mobile__log--title {
+            color: #0A0624 !important;
         }
         .headerarea__solid .headerarea__logo img {
             max-height: 42px;
@@ -43,50 +52,88 @@
         @media (max-width: 767px) {
             .inner__page__spacing { padding-top: 100px; }
         }
-.footer__menu ul li a {
-color:#fff !important;
+        .footer__menu ul li a {
+            color: #fff !important;
+        }
 
-}
-        /* Scrolled state: our own class (added via JS below), independent
-           of whatever class name the theme's own scroll script uses.
-           Forces a solid white bar with dark text so the menu never goes
-           invisible while scrolling, on the homepage or inner pages. */
-      
-        /* .headerarea.navbar-scrolled .headerarea__main__menu nav ul li a,
-        .headerarea.navbar-scrolled .mobile__log--title {
-            color: #0A0624 !important;
-        }:root { */
-    /* --content-text-color: #0A0624;
-} */
-html.is_dark {
-    --content-text-color: #ffffff;
-}
-/* About / Mission section with a pinned white card background
-   (.about__white__bg forces white regardless of theme by default) */
-.about.about__white__bg {
-    background-color: #ffffff;
-}
-html.is_dark .about.about__white__bg {
-    background-color: #14101f; /* swap for your actual dark "card" surface colour */
-}
+        /* Header stays transparent throughout — including while scrolled —
+           per request. Text color still follows headerarea__transparent
+           vs headerarea__solid per route, defined above. */
 
-.about.about__white__bg .section__title__button span,
-.about.about__white__bg .section__title__heading h3,
-.about.about__white__bg .about__number__inner span,
-.about.about__white__bg .about__number__inner p,
-.about.about__white__bg .about__misson h6,
-.about.about__white__bg .about__text__2 p {
-    color: var(--content-text-color) !important;
-}
-body,
-p,
-li,
-h1, h2, h3, h4, h5, h6,
-span:not(.text__gradient),
-a:not(.default__button):not(.text__gradient) {
-    color: var(--content-text-color);
-}
+        html.is_dark {
+            --content-text-color: #ffffff;
+        }
+        /* About / Mission section with a pinned white card background
+           (.about__white__bg forces white regardless of theme by default) */
+        .about.about__white__bg {
+            background-color: #ffffff;
+        }
+        html.is_dark .about.about__white__bg {
+            background-color: #14101f; /* swap for your actual dark "card" surface colour */
+        }
 
+        .about.about__white__bg .section__title__button span,
+        .about.about__white__bg .section__title__heading h3,
+        .about.about__white__bg .about__number__inner span,
+        .about.about__white__bg .about__number__inner p,
+        .about.about__white__bg .about__misson h6,
+        .about.about__white__bg .about__text__2 p {
+            color: var(--content-text-color) !important;
+        }
+        body,
+        p,
+        li,
+        h1, h2, h3, h4, h5, h6,
+        span:not(.text__gradient),
+        a:not(.default__button):not(.text__gradient) {
+            color: var(--content-text-color);
+        }
+        /* Replace the blue→purple→pink gradient overlay with brand colour */
+        .about__white__bg.about__grident__bg::after {
+            background: var(--accent, #607570) !important;
+            opacity: 0.15; /* lower opacity so content behind stays readable */
+        }
+
+        /* Dark mode: slightly more visible */
+        html.is_dark .about__white__bg.about__grident__bg::after {
+            opacity: 0.25;
+        }
+        .project__margin {
+            background: var(--whiteColor);
+            margin-top: 7px !important;
+            border-radius: var(--borderRadius);
+            position: relative;
+            margin-left: 185px;
+            margin-right: 185px;
+        }
+
+        /* ============== WhatsApp icon in the navbar (blinking) ============== */
+        .headerarea__whatsapp {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            transition: background-color .15s ease, transform .15s ease;
+        }
+        .headerarea__whatsapp:hover {
+            background-color: rgba(37, 211, 102, 0.12);
+            transform: scale(1.06);
+        }
+        .headerarea__whatsapp__pulse {
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            background: #25D366;
+            animation: whatsappBlink 1.8s ease-out infinite;
+        }
+        @keyframes whatsappBlink {
+            0%   { transform: scale(1);   opacity: 0.6; }
+            70%  { transform: scale(1.8); opacity: 0; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
     </style>
 
     <script>
@@ -128,7 +175,7 @@ a:not(.default__button):not(.text__gradient) {
 
         <!-- header__start -->
         <header>
-            <div class="headerarea headerarea--1 header__sticky main__header {{ request()->routeIs('home') ? 'headerarea__transparent' : 'headerarea__solid' }}">
+            <div class="headerarea headerarea--1 header__sticky main__header headerarea__transparent">
                 <div class="container desktop__menu__wrapper">
                     <div class="headerarea__main__wrapper position-relative">
 
@@ -136,7 +183,7 @@ a:not(.default__button):not(.text__gradient) {
                             <div class="headerarea__component">
                                 <div class="headerarea__logo">
                                     <a href="{{ url('/') }}">
-                                        <img src="{{ Storage::url($appSetting->logo ?? 'website/img/logo/Logo_1.png') }}"
+                                        <img src="{{ $appSetting->logo_url ?? asset('website/img/logo/Logo_1.png') }}"
                                              alt="{{ $appSetting->app_name ?? config('app.name') }} Logo">
                                     </a>
                                 </div>
@@ -146,8 +193,8 @@ a:not(.default__button):not(.text__gradient) {
                                     <nav>
                                         <ul>
                                             <li><a href="{{ url('/#tb__home') }}">HOME</a></li>
-                                            <li><a href="{{ url('/#tb__service') }}">SERVICE</a></li>
                                             <li><a href="{{ url('/#tb__about') }}">ABOUT</a></li>
+                                            <li><a href="{{ url('/#tb__service') }}">SERVICE</a></li>
                                             <li><a href="{{ url('/#tb__projects') }}">PROJECTS</a></li>
                                             <li><a href="{{ url('/#tb__blogs') }}">BLOGS</a></li>
                                             <li><a href="{{ url('/#tb__contact') }}">CONTACT</a></li>
@@ -156,7 +203,20 @@ a:not(.default__button):not(.text__gradient) {
                                 </div>
                             </div>
                             <div class="headerarea__component">
-                                <div class="headerarea__right">
+
+                                <div class="headerarea__right d-flex align-items-center gap-3">
+
+                                    @if($appSetting->whatsapp_link ?? false)
+                                        <a href="{{ $appSetting->whatsapp_link }}" target="_blank" rel="noopener"
+                                           class="headerarea__whatsapp" aria-label="Chat with us on WhatsApp">
+                                            <span class="headerarea__whatsapp__pulse"></span>
+                                            <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M16.001 3C9.11 3 3.5 8.61 3.5 15.5c0 2.29.62 4.44 1.7 6.29L3 29l7.4-2.16A12.44 12.44 0 0 0 16 28.5C22.89 28.5 28.5 22.89 28.5 16S22.89 3 16.001 3Z" fill="#25D366"/>
+                                                <path d="M22.14 18.66c-.33-.16-1.95-.96-2.26-1.07-.3-.11-.53-.16-.75.17-.22.33-.86 1.07-1.06 1.29-.2.22-.39.25-.72.08-.33-.16-1.4-.52-2.66-1.65-.98-.88-1.65-1.96-1.84-2.29-.19-.33-.02-.5.14-.66.15-.15.33-.39.5-.58.16-.2.22-.33.33-.55.11-.22.06-.42-.03-.58-.08-.16-.75-1.82-1.03-2.49-.27-.65-.55-.56-.75-.57-.19-.01-.42-.01-.64-.01-.22 0-.58.08-.89.42-.3.33-1.16 1.14-1.16 2.77s1.19 3.22 1.36 3.44c.16.22 2.34 3.57 5.67 5.01.79.34 1.41.55 1.89.7.79.25 1.51.22 2.08.13.63-.09 1.95-.8 2.23-1.57.27-.77.27-1.43.19-1.57-.08-.14-.3-.22-.63-.38Z" fill="#fff"/>
+                                            </svg>
+                                        </a>
+                                    @endif
+
                                     <div class="headerarea__button">
                                         <a class="default__button" href="{{ route('vacancies.public.index') }}">CAREERS</a>
                                     </div>
@@ -177,12 +237,22 @@ a:not(.default__button):not(.text__gradient) {
                         <div class="mobile__log">
                             <div class="mobile__log--title">
                                 <a class="mobile__log--link" href="{{ url('/') }}">
-                                    <img class="mobile__log--img" src="{{ Storage::url($appSetting->logo ??     'website/img/logo/Logo_1.png') }}" alt="logo-img">
+                                    <img class="mobile__log--img" src="{{ $appSetting->logo_url ?? asset('website/img/logo/Logo_1.png') }}" alt="logo-img">
                                 </a>
                             </div>
                         </div>
                         <div class="headerarea__component mobile__component__right">
-                            <div class="headerarea__right">
+                            <div class="headerarea__right d-flex align-items-center gap-2">
+                                @if($appSetting->whatsapp_link ?? false)
+                                    <a href="{{ $appSetting->whatsapp_link }}" target="_blank" rel="noopener"
+                                       class="headerarea__whatsapp" aria-label="Chat with us on WhatsApp">
+                                        <span class="headerarea__whatsapp__pulse"></span>
+                                        <svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M16.001 3C9.11 3 3.5 8.61 3.5 15.5c0 2.29.62 4.44 1.7 6.29L3 29l7.4-2.16A12.44 12.44 0 0 0 16 28.5C22.89 28.5 28.5 22.89 28.5 16S22.89 3 16.001 3Z" fill="#25D366"/>
+                                            <path d="M22.14 18.66c-.33-.16-1.95-.96-2.26-1.07-.3-.11-.53-.16-.75.17-.22.33-.86 1.07-1.06 1.29-.2.22-.39.25-.72.08-.33-.16-1.4-.52-2.66-1.65-.98-.88-1.65-1.96-1.84-2.29-.19-.33-.02-.5.14-.66.15-.15.33-.39.5-.58.16-.2.22-.33.33-.55.11-.22.06-.42-.03-.58-.08-.16-.75-1.82-1.03-2.49-.27-.65-.55-.56-.75-.57-.19-.01-.42-.01-.64-.01-.22 0-.58.08-.89.42-.3.33-1.16 1.14-1.16 2.77s1.19 3.22 1.36 3.44c.16.22 2.34 3.57 5.67 5.01.79.34 1.41.55 1.89.7.79.25 1.51.22 2.08.13.63-.09 1.95-.8 2.23-1.57.27-.77.27-1.43.19-1.57-.08-.14-.3-.22-.63-.38Z" fill="#fff"/>
+                                        </svg>
+                                    </a>
+                                @endif
                                 <div class="headerarea__button">
                                         <a class="default__button" href="{{ route('vacancies.public.index') }}">CAREERS</a>
                                 </div>
@@ -198,19 +268,19 @@ a:not(.default__button):not(.text__gradient) {
             <div class="offcanvas__inner">
                 <div class="offcanvas__logo">
                     <a class="offcanvas__logo_link" href="{{ url('/') }}">
-                        <img src="{{ Storage::url($appSetting->logo ?? 'website/img/logo/Logo_2.png') }}" alt="Logo-img">
+                        <img src="{{ $appSetting->logo_url ?? asset('website/img/logo/Logo_2.png') }}" alt="Logo-img">
                     </a>
                     <button class="offcanvas__close--btn" data-offcanvas>close</button>
                 </div>
                 <nav class="offcanvas__menu">
                     <ul class="offcanvas__menu_ul">
                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__home') }}">HOME</a></li>
+                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__about') }}">ABOUT</a></li>
                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__service') }}">SERVICE</a></li>
-                        <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__about') }}">ABOUT</a></li>
                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__projects') }}">PROJECTS</a></li>
-                        <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ route('vacancies.public.index') }}">CAREERS</a></li>
-                        <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__blogs') }}">BLOGS</a></li>
                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__contact') }}">CONTACT</a></li>
+                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ route('vacancies.public.index') }}">CAREERS</a></li>
+
                     </ul>
                 </nav>
             </div>
@@ -237,7 +307,7 @@ a:not(.default__button):not(.text__gradient) {
                         <div class="col-xl-4 col-lg-6 col-md-6" data-aos="fade-up" data-aos-duration="1500">
                             <div class="footer__widget footer__left">
                                 <div class="footer__logo">
-                                    <img src="{{ Storage::url($appSetting->logo ?? 'website/img/logo/Logo_1.png') }}" alt="{{ $appSetting->app_name ?? config('app.name') }}">
+                                    <img src="{{ $appSetting->logo_url ?? asset('website/img/logo/Logo_1.png') }}" alt="{{ $appSetting->app_name ?? config('app.name') }}">
                                 </div>
                                 <div class="footer__text">
                                     <p>{{ $appSetting->address ?? '' }}</p>
@@ -259,9 +329,9 @@ a:not(.default__button):not(.text__gradient) {
                                 <div class="footer__menu">
                                     <ul>
                                         <li><a href="{{ url('/#tb__home') }}">Home</a></li>
-                                        <li><a href="{{ url('/#tb__about') }}">About us</a></li>
-                                        <li><a href="{{ url('/#tb__blogs') }}">Blog update</a></li>
+                                        <li><a href="{{ url('/#tb__about') }}">About</a></li>
                                         <li><a href="{{ url('/#tb__service') }}">Our services</a></li>
+                                        <li><a href="{{ url('/#tb__projects') }}">Projects</a></li>
                                         <li><a href="{{ route('vacancies.public.index') }}">Careers</a></li>
                                     </ul>
                                 </div>
@@ -275,8 +345,9 @@ a:not(.default__button):not(.text__gradient) {
                                     <ul>
                                         <li><a href="#">Privacy & policy</a></li>
                                         <li><a href="#">Terms & conditions</a></li>
-                                        <li><a href="#">FAQ</a></li>
-                                        <li><a href="#">Customer support</a></li>
+<li>
+    <a href="{{ $appSetting->whatsapp_number ? 'https://wa.me/' . preg_replace('/\D/', '', $appSetting->whatsapp_number) : '#' }}" target="_blank" rel="noopener">WhatsApp</a>
+</li>                                        <li><a href="{{ $appSetting->phone ? 'tel:' . $appSetting->phone : '#' }}" target="_blank">Customer support</a></li>
                                         <li><a href="{{ url('/#tb__contact') }}">Contact us</a></li>
                                     </ul>
                                 </div>
@@ -288,10 +359,10 @@ a:not(.default__button):not(.text__gradient) {
                                 <div class="footer__menu__title"><h6>CONTACT :</h6></div>
                                 <div class="footer__text">
                                     @if($appSetting->phone ?? false)
-                                        <p><i class="icofont-phone"></i> {{ $appSetting->phone }}</p>
+                                        <p><i class="icofont-phone"></i> <a href="{{ 'tel:' . $appSetting->phone }}" target="_blank">{{ $appSetting->phone }}</a></p>
                                     @endif
                                     @if($appSetting->email ?? false)
-                                        <p><i class="icofont-envelope"></i> {{ $appSetting->email }}</p>
+                                        <p><i class="icofont-envelope"></i> <a href="{{ 'mailto:' . $appSetting->email }}" target="_blank">{{ $appSetting->email }}</a></p>
                                     @endif
                                 </div>
                             </div>
@@ -307,7 +378,7 @@ a:not(.default__button):not(.text__gradient) {
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-12">
-                            <div class="copyright__right">
+                            <div class="copyright__right text-white">
                                 <ul>
                                     <li><a href="#">Privacy & Policy ||</a></li>
                                     <li><a href="#">Terms & Conditions</a></li>
@@ -339,27 +410,6 @@ a:not(.default__button):not(.text__gradient) {
         if (localStorage.getItem("theme-color") === "light" || (!("theme-color" in localStorage) && "{{ $appSetting->theme ?? 'light' }}" === "light")) {
             document.getElementById("light--to-dark-button")?.classList.remove("dark--mode");
         }
-    </script>
-
-    <script>
-        // Force a readable (dark-text-on-white) header once the page is
-        // scrolled, regardless of homepage (transparent) vs inner page
-        // (solid) starting state — fixes the menu disappearing on scroll.
-        (function () {
-            const header = document.querySelector('.headerarea');
-            if (!header) return;
-
-            function updateHeaderOnScroll() {
-                if (window.scrollY > 60) {
-                    header.classList.add('navbar-scrolled');
-                } else {
-                    header.classList.remove('navbar-scrolled');
-                }
-            }
-
-            updateHeaderOnScroll();
-            window.addEventListener('scroll', updateHeaderOnScroll, { passive: true });
-        })();
     </script>
 
     @stack('scripts')

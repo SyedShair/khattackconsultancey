@@ -62,7 +62,7 @@
 ***************************************************************/
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&display=swap");
-:root {
+/* :root {
   --bodyColor: #222222;
   --bodyBg: #fff;
   --whiteColor: #ffffff;
@@ -106,8 +106,52 @@
   --pinkcolor:#170f2f;
   --blackBlue:#fff;
   --navyBlue2: #fff ;
+} */
+:root {
+  --bodyColor: #222222;
+  --bodyBg: #fff;
+  --whiteColor: #ffffff;
+  --blackColor: #0A0624;
+  --blackBlue: #13201C;
+  --headingColor: #222222;
+  --contentColor: #5F6C76;
+  --primaryColor: #607570;
+  --secondaryColor: #3E5B54;
+  --greyColor: #EDEDED;
+  --borderColor: #eeeeee;
+  --borderColor2: #D7E1DC;
+  --borderColor3: #ccc;
+  --navyBlue: #3E5B54;
+  --navyBlue2: #2B3D37;
+  --pinkcolor: #EEF3F1;
+  --violet: #7C948E;
+  --yellow: #C9A227;
+  --gradientColor: linear-gradient(90deg, #3E5B54 0%, #4F6B63 47.92%, #607570 100%);
+  --gradientColor2: linear-gradient(180deg, rgba(19, 32, 28, 0.00) 0%, #13201C 100%);
+  --gradientColor3: linear-gradient(90deg, #3E5B54 0%, rgba(255, 255, 255, 0.00) 100%);
+  --borderRadius: 8px;
+  --borderRadius2: 5px;
+  --transition: .3s;
+  --bodyFont: "Inter", sans-serif;
+  --headingFont: "Inter", sans-serif;
+  --contentFont: "Inter", sans-serif;
+  --buttonFont: "Source Sans Pro";
 }
 
+.is_dark {
+  --bodyColor: #fff;
+  --bodyBg: #10201B;
+  --headingColor: #fff;
+  --contentColor: #fff;
+  --blackColor: #fff;
+  --whiteColor: #10201B;
+  --borderColor: #2A3B35;
+  --borderColor2: #2E4038;
+  --darkShadow: 0 0 20px 5px rgba(96, 117, 112, 0.15);
+  --pinkcolor: #16221D;
+  --blackBlue: #fff;
+  --navyBlue2: #fff;
+}
 /*------------------------------
 Default CSS
 -------------------------------*/
@@ -1784,8 +1828,8 @@ button.default__button {
   height: 100px;
   border-style: solid;
   border-width: 5px;
-  border-top-color: #465fe9;
-  border-right-color: #465fe9;
+  border-top-color: #2A3B35;
+  border-right-color: #2A3B35;
   border-bottom-color: #d5eaff;
   border-left-color: #d5eaff;
   border-radius: 50%;

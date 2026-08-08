@@ -2,9 +2,14 @@
 
 @section('title', 'Careers | ' . ($appSetting->app_name ?? config('app.name')))
 
+@section('page_banner')
+    <h1>Careers</h1>
+    <p>Join the {{ $appSetting->app_name ?? config('app.name') }} team.</p>
+@endsection
+
 @section('content')
 
-<div class="service sp_bottom_140 special__spacing inner__page__spacing" id="tb__careers__page">
+<div class="service sp_bottom_140 special__spacing sp_top_160" id="tb__careers__page">
     <div class="container">
 
         <div class="row">
@@ -188,7 +193,7 @@
         margin: 0 8px 8px 0;
     }
     .job-meta__pill--accent {
-        background: linear-gradient(90deg, #00229E, #6E1299, #FE0094);
+        background: linear-gradient(90deg, #3E5B54, #4F6B63, #607570);
         color: #fff;
     }
 
@@ -200,7 +205,7 @@
     }
     .apply-card__accent {
         height: 6px;
-        background: linear-gradient(90deg, #00229E, #6E1299, #FE0094);
+        background: linear-gradient(90deg, #3E5B54, #4F6B63, #607570);
     }
     .apply-card__body { padding: 32px; }
     .apply-card__header { display: flex; align-items: center; gap: 14px; }
@@ -212,7 +217,7 @@
         height: 46px;
         min-width: 46px;
         border-radius: 14px;
-        background: linear-gradient(135deg, #00229E, #FE0094);
+        background: linear-gradient(135deg, #3E5B54, #607570);
         color: #fff;
         font-size: 18px;
     }
@@ -237,9 +242,9 @@
     }
     .apply-input:focus {
         outline: none;
-        border-color: #6E1299;
+        border-color: #4F6B63;
         background: #fff;
-        box-shadow: 0 0 0 4px rgba(110, 18, 153, 0.08);
+        box-shadow: 0 0 0 4px rgba(79, 107, 99, 0.08);
     }
 
     .apply-dropzone {
@@ -253,9 +258,9 @@
         background: #FBFAFE;
         transition: border-color .15s ease, background .15s ease;
     }
-    .apply-dropzone:hover { border-color: #6E1299; background: #F8F6FC; }
+    .apply-dropzone:hover { border-color: #4F6B63; background: #F7F9F8; }
     .apply-dropzone--filled { border-style: solid; border-color: #2ecc71; background: #F3FCF6; }
-    .apply-dropzone__icon { font-size: 22px; color: #6E1299; }
+    .apply-dropzone__icon { font-size: 22px; color: #4F6B63; }
     .apply-dropzone__text { font-size: 14px; color: #46435A; line-height: 1.5; }
     .apply-dropzone__input { display: none; }
 
@@ -267,7 +272,7 @@
         font-weight: 700;
         letter-spacing: .5px;
         color: #fff;
-        background: linear-gradient(90deg, #00229E, #6E1299, #FE0094);
+        background: linear-gradient(90deg, #3E5B54, #4F6B63, #607570);
         background-size: 200% auto;
         transition: background-position .4s ease, transform .1s ease;
     }

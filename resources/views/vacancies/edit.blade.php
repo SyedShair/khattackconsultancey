@@ -25,7 +25,9 @@
             </div>
             <div class="card-body">
                 @include('vacancies._form')
-            </div>
+            </div>++++
+
+            
             <div class="card-footer text-end">
                 <a href="{{ route('vacancies.index') }}" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">Save Changes</button>

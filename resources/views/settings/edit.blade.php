@@ -34,7 +34,7 @@
 
                         <div class="mb-4 text-center">
                             <img id="logoPreview"
-                                 src="{{ Storage::url($setting->logo) ?? asset('adminlte/img/AdminLTELogo.png') }}"
+                                 src="{{ $setting->logo_url ?? asset('adminlte/img/AdminLTELogo.png') }}"
                                  alt="Current logo"
                                  class="mb-2 rounded"
                                  style="max-width: 160px; max-height: 160px; object-fit: contain;">
@@ -99,6 +99,13 @@
                                 <label class="form-label"><i class="bi bi-envelope me-1"></i> Email</label>
                                 <input type="email" name="email" class="form-control"
                                        value="{{ old('email', $setting->email) }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="bi bi-whatsapp me-1"></i> WhatsApp Number</label>
+                                <input type="text" name="whatsapp_number" class="form-control"
+                                       placeholder="e.g. +92 300 1234567"
+                                       value="{{ old('whatsapp_number', $setting->whatsapp_number) }}">
+                                <div class="form-text">Include country code. Spaces/dashes are fine — cleaned up automatically. Leave blank to hide the floating WhatsApp button on the website.</div>
                             </div>
                         </div>
 

@@ -102,6 +102,21 @@
 
 @endsection
 
+@push('styles')
+<style>
+    #vacanciesTable tbody tr {
+        transition: background-color .15s ease, opacity .15s ease;
+    }
+    #vacanciesTable tbody tr.table-secondary {
+        background-color: #f4f4f5 !important;
+        opacity: .75;
+    }
+    #vacanciesTable tbody tr.table-secondary td a {
+        color: inherit;
+    }
+</style>
+@endpush
+
 @push('scripts')
 <script>
 (function () {
@@ -188,8 +203,9 @@
                     emptyState.classList.remove('d-none');
                 } else {
                     payload.data.forEach(v => {
+                        const rowClass = v.status === 'closed' ? 'table-secondary text-muted' : '';
                         tableBody.insertAdjacentHTML('beforeend', `
-                            <tr>
+                            <tr class="${rowClass}">
                                 <td>
                                     ${v.public_url ? `<a href="${v.public_url}" target="_blank">${v.title}</a>` : v.title}
                                 </td>

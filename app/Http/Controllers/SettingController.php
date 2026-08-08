@@ -40,6 +40,7 @@ class SettingController extends Controller
 
             'address'  => ['nullable', 'string', 'max:500'],
             'phone'    => ['nullable', 'string', 'max:30'],
+            'whatsapp_number' => ['nullable', 'string', 'max:30'],
             'email'    => ['nullable', 'email', 'max:150'],
             'map_url'  => ['nullable', 'url', 'max:1000'],
 

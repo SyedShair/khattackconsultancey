@@ -229,6 +229,27 @@
                             <p>Services</p>
                         </a>
                     </li>
+                     <li class="nav-item">
+                        <a href="{{ url('/admin/team-members') }}"
+                           class="nav-link {{ request()->is('admin/team-members*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-people-fill"></i>
+                            <p>Team Members</p>
+                        </a>
+                    </li>
+                      <li class="nav-item">
+                        <a href="{{ url('/admin/contact-messages') }}"
+                           class="nav-link {{ request()->is('admin/contact-messages*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-envelope-open"></i>
+                            <p>Contact Messages</p>
+                        </a>
+                    </li>
+                     <li class="nav-item">
+                        <a href="{{ url('/admin/projects') }}"
+                           class="nav-link {{ request()->is('admin/projects*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-kanban"></i>
+                            <p>Projects</p>
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>

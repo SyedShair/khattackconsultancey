@@ -73,12 +73,29 @@
 
     <div class="col-12 mb-3">
         <label class="form-label">Description</label>
-        <textarea name="description" rows="6" class="form-control" required>{{ old('description', $isEdit ? $vacancy->description : '') }}</textarea>
+        <textarea name="description" id="description" rows="6" class="form-control ckeditor-field">{{ old('description', $isEdit ? $vacancy->description : '') }}</textarea>
     </div>
 
     <div class="col-12 mb-3">
-        <label class="form-label">Requirements <span class="text-muted small">(one per line)</span></label>
-        <textarea name="requirements" rows="5" class="form-control">{{ old('requirements', $isEdit ? $vacancy->requirements : '') }}</textarea>
+        <label class="form-label">Requirements</label>
+        <textarea name="requirements" id="requirements" rows="5" class="form-control ckeditor-field">{{ old('requirements', $isEdit ? $vacancy->requirements : '') }}</textarea>
     </div>
 
 </div>
+
+@push('styles')
+<style>
+    .ck-editor__editable_inline { min-height: 180px; }
+</style>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script>
+    document.querySelectorAll('.ckeditor-field').forEach(function (el) {
+        ClassicEditor.create(el).catch(function (error) {
+            console.error('CKEditor failed to load:', error);
+        });
+    });
+</script>
+@endpush

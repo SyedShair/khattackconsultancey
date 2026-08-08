@@ -14,6 +14,7 @@ class Setting extends Model
         'address',
         'phone',
         'email',
+        'whatsapp_number',
         'map_url',
         'opening_hours',
     ];
@@ -38,6 +39,22 @@ class Setting extends Model
     public function getLogoUrlAttribute(): ?string
     {
         return $this->logo ? Storage::disk('public')->url($this->logo) : null;
+    }
+
+    /**
+     * A ready-to-use https://wa.me/... link built from whatsapp_number,
+     * with any spaces, dashes, parentheses, or a leading + stripped out
+     * (wa.me requires just digits, country code first, no punctuation).
+     */
+    public function getWhatsappLinkAttribute(): ?string
+    {
+        if (! $this->whatsapp_number) {
+            return null;
+        }
+
+        $digits = preg_replace('/\D+/', '', $this->whatsapp_number);
+
+        return $digits ? "https://wa.me/{$digits}" : null;
     }
 
     /**

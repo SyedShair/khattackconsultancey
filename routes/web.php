@@ -2,12 +2,16 @@
 
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\HeroSlideController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\PublicVacancyController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +30,7 @@ Route::get('/vacancies', [PublicVacancyController::class, 'index'])->name('vacan
 Route::get('/vacancies/{vacancy:slug}', [PublicVacancyController::class, 'show'])->name('vacancies.public.show');
 Route::post('/vacancies/{vacancy:slug}/apply', [PublicVacancyController::class, 'apply'])->name('vacancies.public.apply');
 Route::post('/careers/apply', [PublicVacancyController::class, 'applyGeneral'])->name('vacancies.public.applyGeneral');
+Route::post('/contact', [PublicContactController::class, 'store'])->name('contact.store');
 
 // ── Guest routes (login) ─────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
@@ -100,6 +105,30 @@ Route::middleware('auth')->group(function () {
             Route::delete('services/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
             Route::post('services/{service}/toggle-active', [ServiceController::class, 'toggleActive'])->name('services.toggleActive');
             Route::post('services/reorder', [ServiceController::class, 'reorder'])->name('services.reorder');
+
+            Route::get('team-members', [TeamMemberController::class, 'index'])->name('team-members.index');
+            Route::get('team-members/create', [TeamMemberController::class, 'create'])->name('team-members.create');
+            Route::post('team-members', [TeamMemberController::class, 'store'])->name('team-members.store');
+            Route::get('team-members/{teamMember}/edit', [TeamMemberController::class, 'edit'])->name('team-members.edit');
+            Route::put('team-members/{teamMember}', [TeamMemberController::class, 'update'])->name('team-members.update');
+            Route::delete('team-members/{teamMember}', [TeamMemberController::class, 'destroy'])->name('team-members.destroy');
+            Route::post('team-members/{teamMember}/toggle-active', [TeamMemberController::class, 'toggleActive'])->name('team-members.toggleActive');
+            Route::post('team-members/reorder', [TeamMemberController::class, 'reorder'])->name('team-members.reorder');
+
+            Route::get('contact-messages', [ContactMessageController::class, 'index'])->name('contact-messages.index');
+            Route::get('contact-messages/data', [ContactMessageController::class, 'data'])->name('contact-messages.data');
+            Route::get('contact-messages/{contactMessage}', [ContactMessageController::class, 'show'])->name('contact-messages.show');
+            Route::put('contact-messages/{contactMessage}/status', [ContactMessageController::class, 'updateStatus'])->name('contact-messages.updateStatus');
+            Route::delete('contact-messages/{contactMessage}', [ContactMessageController::class, 'destroy'])->name('contact-messages.destroy');
+
+            Route::get('projects', [ProjectController::class, 'index'])->name('projects.index');
+            Route::get('projects/create', [ProjectController::class, 'create'])->name('projects.create');
+            Route::post('projects', [ProjectController::class, 'store'])->name('projects.store');
+            Route::get('projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+            Route::put('projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
+            Route::delete('projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+            Route::post('projects/{project}/toggle-active', [ProjectController::class, 'toggleActive'])->name('projects.toggleActive');
+            Route::post('projects/reorder', [ProjectController::class, 'reorder'])->name('projects.reorder');
 
         });
 
