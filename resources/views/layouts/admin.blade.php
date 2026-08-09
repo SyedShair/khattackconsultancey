@@ -174,14 +174,7 @@
                         </ul>
                     </li>
 
-                    <li class="nav-header">App Settings</li>
-                            <li class="nav-item">
-                                <a href="{{ url('/settings') }}"
-                                   class="nav-link {{ request()->is('settings*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-gear"></i>
-                                    <p>Settings</p>
-                                </a>
-                            </li>
+                   
  <li class="nav-header">RECRUITMENT</li>
  
                     <li class="nav-item has-treeview {{ request()->is('admin/vacancies*', 'admin/applications*') ? 'menu-open' : '' }}">
@@ -250,6 +243,41 @@
                             <p>Projects</p>
                         </a>
                     </li>
+
+                    
+                   
+                    <li class="nav-header">ASSISTANT</li>
+ 
+                    <li class="nav-item">
+                        <a href="{{ url('/admin/consultation-bookings') }}"
+                           class="nav-link {{ request()->is('admin/consultation-bookings*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-calendar-check"></i>
+                            <p>Consultation Bookings</p>
+                        </a>
+                    </li>
+ 
+                    <li class="nav-item">
+                        <a href="{{ url('/admin/live-chat') }}"
+                           class="nav-link {{ request()->is('admin/live-chat*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-chat-dots"></i>
+                            <p>
+                                Live Chat
+                                <span class="badge text-bg-danger ms-auto d-none" id="liveChatBadge">0</span>
+                            </p>
+                        </a>
+                    </li>
+ 
+
+
+
+                     <li class="nav-header">App Settings</li>
+                            <li class="nav-item">
+                                <a href="{{ url('/settings') }}"
+                                   class="nav-link {{ request()->is('settings*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-gear"></i>
+                                    <p>Settings</p>
+                                </a>
+                            </li>
                 </ul>
             </nav>
         </div>

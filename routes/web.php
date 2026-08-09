@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ConsultationBookingController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\HeroSlideController;
+use App\Http\Controllers\LiveChatController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PublicContactController;
@@ -31,6 +34,17 @@ Route::get('/vacancies/{vacancy:slug}', [PublicVacancyController::class, 'show']
 Route::post('/vacancies/{vacancy:slug}/apply', [PublicVacancyController::class, 'apply'])->name('vacancies.public.apply');
 Route::post('/careers/apply', [PublicVacancyController::class, 'applyGeneral'])->name('vacancies.public.applyGeneral');
 Route::post('/contact', [PublicContactController::class, 'store'])->name('contact.store');
+
+// ── Floating assistant widget ──────────────────────────────────────
+Route::prefix('assistant')->name('assistant.')->group(function () {
+    Route::post('ai', [AssistantController::class, 'ai'])->name('ai');
+    Route::get('available-dates', [AssistantController::class, 'availableDates'])->name('availableDates');
+    Route::get('available-slots', [AssistantController::class, 'availableSlots'])->name('availableSlots');
+    Route::post('book', [AssistantController::class, 'book'])->name('book');
+    Route::post('chat/start', [AssistantController::class, 'startChat'])->name('chat.start');
+    Route::post('chat/{uuid}/message', [AssistantController::class, 'sendMessage'])->name('chat.message');
+    Route::get('chat/{uuid}/messages', [AssistantController::class, 'fetchMessages'])->name('chat.messages');
+});
 
 // ── Guest routes (login) ─────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
@@ -129,6 +143,21 @@ Route::middleware('auth')->group(function () {
             Route::delete('projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
             Route::post('projects/{project}/toggle-active', [ProjectController::class, 'toggleActive'])->name('projects.toggleActive');
             Route::post('projects/reorder', [ProjectController::class, 'reorder'])->name('projects.reorder');
+
+            Route::get('consultation-bookings', [ConsultationBookingController::class, 'index'])->name('consultation-bookings.index');
+            Route::get('consultation-bookings/data', [ConsultationBookingController::class, 'data'])->name('consultation-bookings.data');
+            Route::get('consultation-bookings/{consultationBooking}', [ConsultationBookingController::class, 'show'])->name('consultation-bookings.show');
+            Route::put('consultation-bookings/{consultationBooking}/status', [ConsultationBookingController::class, 'updateStatus'])->name('consultation-bookings.updateStatus');
+            Route::delete('consultation-bookings/{consultationBooking}', [ConsultationBookingController::class, 'destroy'])->name('consultation-bookings.destroy');
+
+            Route::get('live-chat', [LiveChatController::class, 'index'])->name('live-chat.index');
+            Route::get('live-chat/data', [LiveChatController::class, 'data'])->name('live-chat.data');
+            Route::get('live-chat/notifications', [LiveChatController::class, 'notifications'])->name('live-chat.notifications');
+            Route::get('live-chat/{uuid}', [LiveChatController::class, 'show'])->name('live-chat.show');
+            Route::get('live-chat/{uuid}/poll', [LiveChatController::class, 'poll'])->name('live-chat.poll');
+            Route::post('live-chat/{uuid}/typing', [LiveChatController::class, 'typing'])->name('live-chat.typing');
+            Route::post('live-chat/{uuid}/reply', [LiveChatController::class, 'reply'])->name('live-chat.reply');
+            Route::post('live-chat/{uuid}/close', [LiveChatController::class, 'close'])->name('live-chat.close');
 
         });
 

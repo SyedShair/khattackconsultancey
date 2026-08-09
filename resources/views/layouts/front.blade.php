@@ -329,9 +329,9 @@
                                 <div class="footer__menu">
                                     <ul>
                                         <li><a href="{{ url('/#tb__home') }}">Home</a></li>
-                                        <li><a href="{{ url('/#tb__about') }}">About</a></li>
+                                        <li><a href="{{ url('/#tb__about') }}">About us</a></li>
+                                        <li><a href="{{ url('/#tb__projects') }}">Blog update</a></li>
                                         <li><a href="{{ url('/#tb__service') }}">Our services</a></li>
-                                        <li><a href="{{ url('/#tb__projects') }}">Projects</a></li>
                                         <li><a href="{{ route('vacancies.public.index') }}">Careers</a></li>
                                     </ul>
                                 </div>
@@ -345,9 +345,8 @@
                                     <ul>
                                         <li><a href="#">Privacy & policy</a></li>
                                         <li><a href="#">Terms & conditions</a></li>
-<li>
-    <a href="{{ $appSetting->whatsapp_number ? 'https://wa.me/' . preg_replace('/\D/', '', $appSetting->whatsapp_number) : '#' }}" target="_blank" rel="noopener">WhatsApp</a>
-</li>                                        <li><a href="{{ $appSetting->phone ? 'tel:' . $appSetting->phone : '#' }}" target="_blank">Customer support</a></li>
+                                        <li><a href="#">FAQ</a></li>
+                                        <li><a href="#contact">Customer support</a></li>
                                         <li><a href="{{ url('/#tb__contact') }}">Contact us</a></li>
                                     </ul>
                                 </div>
@@ -359,10 +358,10 @@
                                 <div class="footer__menu__title"><h6>CONTACT :</h6></div>
                                 <div class="footer__text">
                                     @if($appSetting->phone ?? false)
-                                        <p><i class="icofont-phone"></i> <a href="{{ 'tel:' . $appSetting->phone }}" target="_blank">{{ $appSetting->phone }}</a></p>
+                                        <p><i class="icofont-phone"></i> {{ $appSetting->phone }}</p>
                                     @endif
                                     @if($appSetting->email ?? false)
-                                        <p><i class="icofont-envelope"></i> <a href="{{ 'mailto:' . $appSetting->email }}" target="_blank">{{ $appSetting->email }}</a></p>
+                                        <p><i class="icofont-envelope"></i> {{ $appSetting->email }}</p>
                                     @endif
                                 </div>
                             </div>
@@ -378,7 +377,7 @@
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-12">
-                            <div class="copyright__right text-white">
+                            <div class="copyright__right">
                                 <ul>
                                     <li><a href="#">Privacy & Policy ||</a></li>
                                     <li><a href="#">Terms & Conditions</a></li>
@@ -411,6 +410,8 @@
             document.getElementById("light--to-dark-button")?.classList.remove("dark--mode");
         }
     </script>
+
+    @include('partials.assistant-widget')
 
     @stack('scripts')
 </body>
