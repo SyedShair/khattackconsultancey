@@ -24,9 +24,9 @@
 
         <div id="assistantHeader">
             <div class="d-flex align-items-center gap-2">
-                @if($appSetting->logo_url ?? false)
-                    <img src="{{ $appSetting->logo_url }}" alt="" id="assistantHeaderLogo">
-                @endif
+              
+                    <img src="{{asset('website/img/footer/brand__badge__inner.png')}}" alt="" id="assistantHeaderLogo">
+                
                 <div>
                     <div id="assistantHeaderTitle">{{ $appSetting->app_name ?? config('app.name') }}</div>
                     <div id="assistantHeaderStatus"><span class="assistant-dot"></span> Online</div>

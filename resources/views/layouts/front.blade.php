@@ -196,7 +196,7 @@
                                             <li><a href="{{ url('/#tb__about') }}">ABOUT</a></li>
                                             <li><a href="{{ url('/#tb__service') }}">SERVICE</a></li>
                                             <li><a href="{{ url('/#tb__projects') }}">PROJECTS</a></li>
-                                            <li><a href="{{ url('/#tb__blogs') }}">BLOGS</a></li>
+                                            <li><a href="{{ url('/#tb__pricing') }}">PRICING</a></li>
                                             <li><a href="{{ url('/#tb__contact') }}">CONTACT</a></li>
                                         </ul>
                                     </nav>
@@ -279,7 +279,8 @@
                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__service') }}">SERVICE</a></li>
                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__projects') }}">PROJECTS</a></li>
                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__contact') }}">CONTACT</a></li>
-                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ route('vacancies.public.index') }}">CAREERS</a></li>
+                        <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__pricing') }}">PRICING</a></li>
+                        <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ route('vacancies.public.index') }}">CAREERS</a></li>
 
                     </ul>
                 </nav>
@@ -330,8 +331,9 @@
                                     <ul>
                                         <li><a href="{{ url('/#tb__home') }}">Home</a></li>
                                         <li><a href="{{ url('/#tb__about') }}">About us</a></li>
-                                        <li><a href="{{ url('/#tb__projects') }}">Blog update</a></li>
-                                        <li><a href="{{ url('/#tb__service') }}">Our services</a></li>
+                                        <li><a href="{{ url('/#tb__service') }}">Our services</a></li>                                        <li><a href="{{ url('/#tb__projects') }}">Projects</a></li>
+                                        <li><a href="{{ url('/#tb__pricing') }}">Pricing </a></li>
+
                                         <li><a href="{{ route('vacancies.public.index') }}">Careers</a></li>
                                     </ul>
                                 </div>
@@ -345,7 +347,6 @@
                                     <ul>
                                         <li><a href="#">Privacy & policy</a></li>
                                         <li><a href="#">Terms & conditions</a></li>
-                                        <li><a href="#">FAQ</a></li>
                                         <li><a href="#contact">Customer support</a></li>
                                         <li><a href="{{ url('/#tb__contact') }}">Contact us</a></li>
                                     </ul>
@@ -358,10 +359,10 @@
                                 <div class="footer__menu__title"><h6>CONTACT :</h6></div>
                                 <div class="footer__text">
                                     @if($appSetting->phone ?? false)
-                                        <p><i class="icofont-phone"></i> {{ $appSetting->phone }}</p>
+                                        <p><i class="icofont-phone"></i> <a href="tel:{{ $appSetting->phone }}">{{ $appSetting->phone }}</a></p>
                                     @endif
                                     @if($appSetting->email ?? false)
-                                        <p><i class="icofont-envelope"></i> {{ $appSetting->email }}</p>
+                                        <p><i class="icofont-envelope"></i> <a href="mailto:{{ $appSetting->email }}">{{ $appSetting->email }}</a></p>
                                     @endif
                                 </div>
                             </div>
@@ -377,7 +378,7 @@
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-12">
-                            <div class="copyright__right">
+                            <div class="copyright__right text-white">
                                 <ul>
                                     <li><a href="#">Privacy & Policy ||</a></li>
                                     <li><a href="#">Terms & Conditions</a></li>

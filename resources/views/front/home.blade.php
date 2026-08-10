@@ -459,6 +459,153 @@ We are dedicated to providing personalized services tailored to meet the unique 
 <!-- project__section__end -->
 
 @php
+    $pricingPlans = \App\Models\PricingPlan::active()->get();
+    $fallbackPlans = collect([
+        (object) ['title' => 'BASIC PLAN', 'subtitle' => 'Small Business', 'price_monthly' => 80.26, 'price_yearly' => 380.26, 'features_list' => ['Initial Consultation', 'Strategy Development', 'Market Research', 'Marketing Strategy', 'Risk Management'], 'button_text' => 'GET STARTED', 'button_link_or_default' => '#', 'is_popular' => false],
+        (object) ['title' => 'SLIVER PLAN', 'subtitle' => 'Mid Business', 'price_monthly' => 90.26, 'price_yearly' => 390.26, 'features_list' => ['Initial Consultation', 'Strategy Development', 'Market Research', 'Marketing Strategy', 'Risk Management'], 'button_text' => 'GET STARTED', 'button_link_or_default' => '#', 'is_popular' => false],
+        (object) ['title' => 'GOLD PLAN', 'subtitle' => 'Big Business', 'price_monthly' => 95.26, 'price_yearly' => 395.26, 'features_list' => ['Initial Consultation', 'Strategy Development', 'Market Research', 'Marketing Strategy', 'Risk Management'], 'button_text' => 'GET STARTED', 'button_link_or_default' => '#', 'is_popular' => false],
+        (object) ['title' => 'POPULAR PLAN', 'subtitle' => 'All Business', 'price_monthly' => 99.99, 'price_yearly' => 399.99, 'features_list' => ['Initial Consultation', 'Strategy Development', 'Market Research', 'Marketing Strategy', 'Risk Management'], 'button_text' => 'GET STARTED', 'button_link_or_default' => '#', 'is_popular' => true],
+    ]);
+    $displayPlans = $pricingPlans->isNotEmpty() ? $pricingPlans : $fallbackPlans;
+
+    // Only show the yearly tab if at least one plan actually has a yearly price set.
+    $hasYearlyPricing = $displayPlans->contains(fn ($p) => ! empty($p->price_yearly));
+@endphp
+
+<!-- pricing__section__start -->
+<div class="pricing sp_top_120 sp_bottom_120 special__spacing" style="background: var(--pinkcolor) url({{ asset('website/img/service/service__bg__3.png') }});" id="tb__pricing">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12" data-aos="fade-up" data-aos-duration="1500">
+                <div class="section__title text-center sp_bottom_50">
+                    <div class="section__title__button">
+                        <span class="text__gradient">Price & Planning</span>
+                    </div>
+                    <div class="section__title__heading">
+                        <h3>DISCOVER OUR COMPETITIVE CONSULTING RATES</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if($hasYearlyPricing)
+            <div class="row">
+                <div class="col-xl-12" data-aos="fade-up" data-aos-duration="1500">
+                    <ul class="nav pricing__tab" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="pricing__tab__link active" data-bs-toggle="tab" data-bs-target="#projects__one" type="button">BILLED MONTHLY</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="pricing__tab__link" data-bs-toggle="tab" data-bs-target="#projects__two" type="button">BILLED YEARLY</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        @endif
+
+        <div class="tab-content tab__content__wrapper" id="myTabContent">
+
+            {{-- ============== Monthly ============== --}}
+            <div class="tab-pane fade active show" id="projects__one" role="tabpanel" aria-labelledby="projects__one">
+                <div class="social__wrapper">
+                    <div class="row">
+                        @foreach($displayPlans as $index => $plan)
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 pricing__single__wrap" data-aos="fade-up" data-aos-duration="{{ 1500 + $index * 300 }}">
+                                <div class="common__gradient__bg pricing__gradient single__transform">
+                                    <div class="pricing__single {{ $plan->is_popular ? 'pricing__special' : '' }}">
+
+                                        @if($plan->is_popular)
+                                            <div class="pricing__special__badge">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="55" viewBox="0 0 36 55" fill="none">
+                                                    <path d="M14.8596 32.0792L18.1387 30.3798L21.4161 32.0742L20.7867 28.4819L23.4394 25.9344L19.7738 25.4119L18.134 22.1436L16.496 25.4149L12.832 25.9407L15.4843 28.4835L14.8596 32.0792Z" fill="#07B318"/>
+                                                    <path d="M0 0H36V6.55273H0V0Z" fill="#07B318"/>
+                                                    <path d="M0 55L18 45.5225L36 55V9.77539H0V55ZM14.3229 22.4692L18.1308 14.8611L21.9469 22.4663L30.4709 23.6811L24.306 29.6056L25.7663 37.9657L18.1389 34.0208L10.5166 37.9707L11.9693 29.6103L5.79759 23.6937L14.3229 22.4692Z" fill="#07B318"/>
+                                                </svg>
+                                            </div>
+                                            <div class="pricing__small__button"><span>POPULAR PLAN</span></div>
+                                        @else
+                                            <div class="pricing__small__button"><span>{{ strtoupper($plan->title) }}</span></div>
+                                        @endif
+
+                                        <div class="common__gradient__bg pricing__inner__gradient">
+                                            <div class="pricing__single__price">
+                                                <h6 class="text__gradient">£{{ number_format($plan->price_monthly, 2) }}</h6>
+                                                <span>{{ $plan->subtitle }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="pricing__single__text">
+                                            <ul>
+                                                @foreach($plan->features_list as $feature)
+                                                    <li>{{ $feature }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                        <div class="pricing__single__button">
+                                            <a class="default__button common__gradient__bg" href="{{ $plan->button_link_or_default }}"><span>{{ $plan->button_text }}</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            {{-- ============== Yearly ============== --}}
+            @if($hasYearlyPricing)
+                <div class="tab-pane fade" id="projects__two" role="tabpanel" aria-labelledby="projects__two">
+                    <div class="social__wrapper">
+                        <div class="row">
+                            @foreach($displayPlans as $index => $plan)
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 pricing__single__wrap" data-aos="fade-up" data-aos-duration="{{ 1500 + $index * 300 }}">
+                                    <div class="common__gradient__bg pricing__gradient single__transform">
+                                        <div class="pricing__single {{ $plan->is_popular ? 'pricing__special' : '' }}">
+
+                                            @if($plan->is_popular)
+                                                <div class="pricing__special__badge">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="55" viewBox="0 0 36 55" fill="none">
+                                                        <path d="M14.8596 32.0792L18.1387 30.3798L21.4161 32.0742L20.7867 28.4819L23.4394 25.9344L19.7738 25.4119L18.134 22.1436L16.496 25.4149L12.832 25.9407L15.4843 28.4835L14.8596 32.0792Z" fill="#07B318"/>
+                                                        <path d="M0 0H36V6.55273H0V0Z" fill="#07B318"/>
+                                                        <path d="M0 55L18 45.5225L36 55V9.77539H0V55ZM14.3229 22.4692L18.1308 14.8611L21.9469 22.4663L30.4709 23.6811L24.306 29.6056L25.7663 37.9657L18.1389 34.0208L10.5166 37.9707L11.9693 29.6103L5.79759 23.6937L14.3229 22.4692Z" fill="#07B318"/>
+                                                    </svg>
+                                                </div>
+                                                <div class="pricing__small__button"><span>POPULAR PLAN</span></div>
+                                            @else
+                                                <div class="pricing__small__button"><span>{{ strtoupper($plan->title) }}</span></div>
+                                            @endif
+
+                                            <div class="common__gradient__bg pricing__inner__gradient">
+                                                <div class="pricing__single__price">
+                                                    <h6 class="text__gradient">${{ number_format($plan->price_yearly ?? $plan->price_monthly, 2) }}</h6>
+                                                    <span>{{ $plan->subtitle }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="pricing__single__text">
+                                                <ul>
+                                                    @foreach($plan->features_list as $feature)
+                                                        <li>{{ $feature }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                            <div class="pricing__single__button">
+                                                <a class="default__button common__gradient__bg" href="{{ $plan->button_link_or_default }}"><span>{{ $plan->button_text }}</span></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+        </div>
+
+    </div>
+</div>
+<!-- pricing__section__end -->
+
+@php
     $teamMembers = \App\Models\TeamMember::active()->get();
     $fallbackTeam = [
         ['name' => 'GINGER GRIFFITH', 'designation' => 'Founder & CEO', 'photo' => asset('website/img/team/team_5.png')],

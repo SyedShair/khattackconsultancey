@@ -245,6 +245,13 @@
                     </li>
 
                     
+                    <li class="nav-item">
+                        <a href="{{ url('/admin/pricing-plans') }}"
+                           class="nav-link {{ request()->is('admin/pricing-plans*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-tags"></i>
+                            <p>Pricing Plans</p>
+                        </a>
+                    </li>
                    
                     <li class="nav-header">ASSISTANT</li>
  
@@ -330,7 +337,7 @@
     <footer class="app-footer">
         <strong>{{ config('app.name') }}</strong>
         <div class="float-end d-none d-sm-inline-block">
-            <b>Laravel</b> 12 · AdminLTE 4
+            <b>SyedSher</b>
         </div>
     </footer>
 

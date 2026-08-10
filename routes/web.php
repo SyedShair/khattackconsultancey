@@ -8,6 +8,7 @@ use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\HeroSlideController;
 use App\Http\Controllers\LiveChatController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\PricingPlanController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\PublicVacancyController;
@@ -149,6 +150,16 @@ Route::middleware('auth')->group(function () {
             Route::get('consultation-bookings/{consultationBooking}', [ConsultationBookingController::class, 'show'])->name('consultation-bookings.show');
             Route::put('consultation-bookings/{consultationBooking}/status', [ConsultationBookingController::class, 'updateStatus'])->name('consultation-bookings.updateStatus');
             Route::delete('consultation-bookings/{consultationBooking}', [ConsultationBookingController::class, 'destroy'])->name('consultation-bookings.destroy');
+
+            Route::get('pricing-plans', [PricingPlanController::class, 'index'])->name('pricing-plans.index');
+            Route::get('pricing-plans/create', [PricingPlanController::class, 'create'])->name('pricing-plans.create');
+            Route::post('pricing-plans', [PricingPlanController::class, 'store'])->name('pricing-plans.store');
+            Route::get('pricing-plans/{pricingPlan}/edit', [PricingPlanController::class, 'edit'])->name('pricing-plans.edit');
+            Route::put('pricing-plans/{pricingPlan}', [PricingPlanController::class, 'update'])->name('pricing-plans.update');
+            Route::delete('pricing-plans/{pricingPlan}', [PricingPlanController::class, 'destroy'])->name('pricing-plans.destroy');
+            Route::post('pricing-plans/{pricingPlan}/toggle-active', [PricingPlanController::class, 'toggleActive'])->name('pricing-plans.toggleActive');
+            Route::post('pricing-plans/{pricingPlan}/toggle-popular', [PricingPlanController::class, 'togglePopular'])->name('pricing-plans.togglePopular');
+            Route::post('pricing-plans/reorder', [PricingPlanController::class, 'reorder'])->name('pricing-plans.reorder');
 
             Route::get('live-chat', [LiveChatController::class, 'index'])->name('live-chat.index');
             Route::get('live-chat/data', [LiveChatController::class, 'data'])->name('live-chat.data');
