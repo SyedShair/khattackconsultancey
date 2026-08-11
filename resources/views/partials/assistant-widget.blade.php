@@ -24,9 +24,9 @@
 
         <div id="assistantHeader">
             <div class="d-flex align-items-center gap-2">
-              
-                    <img src="{{asset('website/img/footer/brand__badge__inner.png')}}" alt="" id="assistantHeaderLogo">
-                
+
+                <img src="{{asset('website/img/footer/brand__badge__inner.png')}}" alt="" id="assistantHeaderLogo">
+
                 <div>
                     <div id="assistantHeaderTitle">{{ $appSetting->app_name ?? config('app.name') }}</div>
                     <div id="assistantHeaderStatus"><span class="assistant-dot"></span> Online</div>
@@ -190,6 +190,21 @@
 </style>
 <script>
 (function () {
+    // ── Guard against double-initialization ──────────────────────────
+    // If this partial is included more than once on the same page (e.g.
+    // present in both the header and footer, or pulled in by two
+    // different layout sections), the widget's IDs are duplicated in
+    // markup but document.getElementById() only ever finds the first
+    // one — so every script instance ends up attaching its own
+    // listeners and its own polling interval to that SAME single set
+    // of visible elements. That's what causes messages to send/appear
+    // twice. This flag makes any run after the first a no-op.
+    if (window.__assistantWidgetInitialized) {
+        console.warn('Assistant widget already initialized — skipping duplicate init. This partial is likely included more than once in the layout.');
+        return;
+    }
+    window.__assistantWidgetInitialized = true;
+
     const COMPANY_NAME = @json($appSetting->app_name ?? config('app.name'));
     const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').content;
     const STORAGE_KEY = 'assistant_chat_uuid';
@@ -216,6 +231,7 @@
     let unreadCount = 0;
     let assignedAdminName = null;
     let adminTypingIndicatorShown = false;
+    let isSubmitting = false; // second line of defense against double-submit
 
     function scrollToBottom() {
         messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -238,9 +254,16 @@
         if (!online) headerStatus.querySelector('.assistant-dot').style.background = '#f59e0b';
     }
 
-    function addBotMessage(html) {
+    // msgId is optional — pass the server message id for anything that
+    // came from a poll/fetch response, so it can be de-duplicated if
+    // it's ever rendered twice (belt-and-braces alongside the init guard).
+    function addBotMessage(html, msgId = null) {
+        if (msgId !== null && messagesEl.querySelector(`[data-msg-id="${msgId}"]`)) {
+            return;
+        }
         const el = document.createElement('div');
         el.className = 'assistant-msg assistant-msg--bot';
+        if (msgId !== null) el.dataset.msgId = msgId;
         el.innerHTML = `<div class="assistant-msg__bubble">${html}</div>`;
         messagesEl.appendChild(el);
         scrollToBottom();
@@ -587,7 +610,7 @@
                 addBotMessage("Welcome back! Continuing your conversation with our team below.");
                 payload.messages.forEach(m => {
                     if (m.sender === 'visitor') addUserMessage(m.message);
-                    else addBotMessage(escapeHtml(m.message));
+                    else addBotMessage(escapeHtml(m.message), m.id);
                     lastChatMessageId = Math.max(lastChatMessageId, m.id);
                 });
                 if (payload.assigned_admin_name) {
@@ -669,7 +692,7 @@
                     hideTyping();
                     adminTypingIndicatorShown = false;
                     payload.messages.forEach(m => {
-                        if (m.sender !== 'visitor') addBotMessage(escapeHtml(m.message));
+                        if (m.sender !== 'visitor') addBotMessage(escapeHtml(m.message), m.id);
                         lastChatMessageId = Math.max(lastChatMessageId, m.id);
                     });
                 }
@@ -682,8 +705,18 @@
         e.preventDefault();
         const text = input.value.trim();
         if (!text || input.disabled) return;
+
+        // Guard against a double-fire submit event (rapid Enter/click).
+        if (isSubmitting) return;
+        isSubmitting = true;
+
         input.value = '';
         activeSubmitHandler(text);
+
+        // Release the guard on the next tick — activeSubmitHandler calls
+        // are fire-and-forget (not awaited here), so this just needs to
+        // block a same-tick double dispatch, not the whole request.
+        setTimeout(() => { isSubmitting = false; }, 300);
     });
 })();
 </script>
