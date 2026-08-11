@@ -168,7 +168,7 @@
                             <div class="about__vision__wrapper about__vision__wrapper--3">
                             <div class="about__number">
                                 <div class="about__number__inner">
-                                    <span style="font-size: 38px;">Khattak</span>
+                                    <span style="font-size: clamp(1.6rem, 5vw, 2.375rem);">Khattak</span>
                                     <p> Consultancy</p>
                                     <div class="about__number__icon">
                                         <a href="#">  <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -241,7 +241,7 @@ We are dedicated to providing personalized services tailored to meet the unique 
             @endphp
  
             @forelse($services as $index => $service)
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12" data-aos="fade-up" data-aos-duration="{{ 1500 + $index * 200 }}">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12" data-aos="fade-up" data-aos-duration="{{ 1500 + $index * 200 }}">
                     <div class="service__single__wraper common__gradient__bg single__transform">
                         <div class="service__single__inner">
                             <div class="service__img">
@@ -266,7 +266,7 @@ We are dedicated to providing personalized services tailored to meet the unique 
             @empty
                 {{-- No services configured yet in admin — sensible defaults so this section never looks empty --}}
                 @foreach($fallbackServices as $index => $fallback)
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12" data-aos="fade-up" data-aos-duration="{{ 1500 + $index * 200 }}">
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-12" data-aos="fade-up" data-aos-duration="{{ 1500 + $index * 200 }}">
                         <div class="service__single__wraper common__gradient__bg single__transform">
                             <div class="service__single__inner">
                                 <div class="service__img"><img src="{{ $fallback['icon'] }}" alt="{{ $fallback['title'] }}"></div>
@@ -355,10 +355,10 @@ We are dedicated to providing personalized services tailored to meet the unique 
 
 <!-- project__section__start -->
 <div class="project sp_bottom_80 special__spacing" id="tb__projects">
-    <div class="project__margin">
+    <div class="section__strock__line__animation">
         <div class="container sp_top_100">
             <div class="row align-items-center" data-aos="fade-up" data-aos-duration="1500">
-                <div class="col-xl-4 col-lg-3 col-md-6 col-sm-12">
+                <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12">
                     <div class="section__title section__title--2  sp_bottom_30">
                         <div class="section__title__button">
                             <span class="text__gradient">Our Project</span>
@@ -369,7 +369,7 @@ We are dedicated to providing personalized services tailored to meet the unique 
 
                     </div>
                 </div>
-                <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12">
+                <div class="col-xl-2 col-lg-3 col-md-12 col-sm-12">
                     <div class="project__bottom__img text-center">
                         <img src="{{ asset('website/img/project/project__small__img__2.png') }}" alt="">
                     </div>
@@ -443,9 +443,11 @@ We are dedicated to providing personalized services tailored to meet the unique 
                 @endforelse
 
             </div>
-            <div class="col-xl-12" data-aos="fade-up" data-aos-duration="1500">
-                <div class="project__bottom__button sp_top_30 text-center">
-                    <a class="default__button btn__black " href="#">VIEW OTHER PROJECT</a>
+            <div class="row">
+                <div class="col-xl-12" data-aos="fade-up" data-aos-duration="1500">
+                    <div class="project__bottom__button sp_top_30 text-center">
+                        <a class="default__button btn__black " href="#">VIEW OTHER PROJECT</a>
+                    </div>
                 </div>
             </div>
             <div class="project__small__img">
@@ -491,7 +493,7 @@ We are dedicated to providing personalized services tailored to meet the unique 
         @if($hasYearlyPricing)
             <div class="row">
                 <div class="col-xl-12" data-aos="fade-up" data-aos-duration="1500">
-                    <ul class="nav pricing__tab" id="myTab" role="tablist">
+                    <ul class="nav pricing__tab flex-wrap justify-content-center" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="pricing__tab__link active" data-bs-toggle="tab" data-bs-target="#projects__one" type="button">BILLED MONTHLY</button>
                         </li>
@@ -510,7 +512,7 @@ We are dedicated to providing personalized services tailored to meet the unique 
                 <div class="social__wrapper">
                     <div class="row">
                         @foreach($displayPlans as $index => $plan)
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 pricing__single__wrap" data-aos="fade-up" data-aos-duration="{{ 1500 + $index * 300 }}">
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 pricing__single__wrap" data-aos="fade-up" data-aos-duration="{{ 1500 + $index * 300 }}">
                                 <div class="common__gradient__bg pricing__gradient single__transform">
                                     <div class="pricing__single {{ $plan->is_popular ? 'pricing__special' : '' }}">
 
@@ -557,7 +559,7 @@ We are dedicated to providing personalized services tailored to meet the unique 
                     <div class="social__wrapper">
                         <div class="row">
                             @foreach($displayPlans as $index => $plan)
-                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 pricing__single__wrap" data-aos="fade-up" data-aos-duration="{{ 1500 + $index * 300 }}">
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 pricing__single__wrap" data-aos="fade-up" data-aos-duration="{{ 1500 + $index * 300 }}">
                                     <div class="common__gradient__bg pricing__gradient single__transform">
                                         <div class="pricing__single {{ $plan->is_popular ? 'pricing__special' : '' }}">
 
@@ -757,25 +759,25 @@ We are dedicated to providing personalized services tailored to meet the unique 
                     @csrf
                     <div class="contact__input__wrapper">
                         <div class="row">
-                            <div class="col-xl-6">
+                            <div class="col-md-6 col-xl-6">
                                 <div class="contact__input">
                                     <input class="contact__common__input" type="text" name="first_name"
                                            value="{{ old('first_name') }}" placeholder="First Name" required>
                                 </div>
                             </div>
-                            <div class="col-xl-6">
+                            <div class="col-md-6 col-xl-6">
                                 <div class="contact__input">
                                     <input class="contact__common__input" type="text" name="last_name"
                                            value="{{ old('last_name') }}" placeholder="Last Name">
                                 </div>
                             </div>
-                            <div class="col-xl-6">
+                            <div class="col-md-6 col-xl-6">
                                 <div class="contact__input">
                                     <input class="contact__common__input" type="email" name="email"
                                            value="{{ old('email') }}" placeholder="Email" required>
                                 </div>
                             </div>
-                            <div class="col-xl-6">
+                            <div class="col-md-6 col-xl-6">
                                 <div class="contact__input">
                                     <input class="contact__common__input" type="text" name="phone"
                                            value="{{ old('phone') }}" placeholder="Phone">
@@ -945,6 +947,97 @@ We are dedicated to providing personalized services tailored to meet the unique 
 
 
 @endsection
+
+@push('styles')
+<style>
+    /* ====================================================================
+       Responsive safety net for this page.
+       These rules load after the theme's own stylesheet, since they're
+       pushed to the layout's styles stack and rendered late in <head>,
+       so they take precedence for the specific issues below without
+       touching the theme's CSS files directly.
+       ==================================================================== */
+
+    /* 1) Guard against horizontal scroll / "shake" on resize.
+          A single oversized element (an image without max-width, a fixed
+          -width marquee track, etc.) is enough to make the whole page
+          wider than the viewport, which shows up as a jump/shake when
+          resizing or on first paint on a narrow phone. */
+    html, body {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+
+    /* 2) No image should ever be wider than its column — belt-and-braces
+          on top of whatever width rules the theme's own CSS sets. */
+    .herobanner__img img,
+    .about__img__3 img,
+    .about__img__wrapper img,
+    .project__img img,
+    .team__member__img img,
+    .contact__img img,
+    .service__img img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* 3) Fluid type for the longest fixed-size headings, so they can't
+          force horizontal overflow on very small phones (~320–375px). */
+    .herobanner__title h1 {
+        font-size: clamp(1.6rem, 5.5vw, 3.2rem) !important;
+        line-height: 1.15 !important;
+    }
+    .section__title__heading h3 {
+        font-size: clamp(1.35rem, 3.6vw, 2.2rem) !important;
+        line-height: 1.25 !important;
+    }
+    .about__text__2 p,
+    .about__text__3 p,
+    .herobanner__text p {
+        font-size: clamp(0.9rem, 2vw, 1.05rem) !important;
+    }
+
+    /* 4) Contact form inputs/textarea: prevent them from ever exceeding
+          their column width regardless of theme padding/border-box quirks. */
+    .contact__common__input {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* 5) Pricing tab buttons: allow wrapping and comfortable tap targets
+          on narrow phones instead of a cramped single row. */
+    @media (max-width: 480px) {
+        .pricing__tab__link {
+            font-size: 0.8rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+    }
+
+    /* 6) Iframe map: never let it push the page wider than the viewport. */
+    .ratio iframe {
+        max-width: 100%;
+    }
+
+    /* 7) Projects section: on small screens the description text stacks
+          full-width and grows much taller than on desktop, but the card
+          row directly below it visually overlaps on top of it (likely a
+          negative top-margin in the theme's own CSS tuned for the
+          shorter, narrower desktop text column). Give both some breathing
+          room specifically on mobile so the cards land below the text
+          instead of on top of it. */
+    @media (max-width: 767.98px) {
+        .project__bottom__text {
+            margin-bottom: 1.75rem;
+            display: block;
+        }
+        .project__margin > .container + .container {
+            margin-top: 0 !important;
+            padding-top: 1rem !important;
+        }
+    }
+</style>
+@endpush
 
 
 @push('scripts')
