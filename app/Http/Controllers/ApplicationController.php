@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ApplicationStatusUpdatedMail;
 use App\Models\Application;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class ApplicationController extends Controller
@@ -88,11 +91,30 @@ class ApplicationController extends Controller
             'status' => ['required', 'string', 'in:' . implode(',', array_keys(Application::STATUSES))],
         ]);
 
+        $statusChanged = $application->status !== $validated['status'];
+
         $application->update($validated);
+
+        if ($statusChanged) {
+            $this->notifyApplicantOfStatusChange($application);
+        }
 
         return response()->json([
             'message' => "Status updated to \"{$application->status}\".",
         ]);
+    }
+
+    /**
+     * Emails the applicant that their status changed. Wrapped so a mail
+     * failure never blocks the admin's status update itself.
+     */
+    protected function notifyApplicantOfStatusChange(Application $application): void
+    {
+        try {
+            Mail::to($application->email)->send(new ApplicationStatusUpdatedMail($application));
+        } catch (\Throwable $e) {
+            Log::error('Failed to send application status update email: ' . $e->getMessage());
+        }
     }
 
     public function destroy(Application $application)

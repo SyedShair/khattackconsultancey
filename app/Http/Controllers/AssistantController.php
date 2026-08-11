@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ConsultationBookingConfirmedMail;
+use App\Mail\LiveChatWaitingMail;
+use App\Mail\NewConsultationBookingAdminMail;
 use App\Models\ChatMessage;
 use App\Models\ChatSession;
 use App\Models\ConsultationBooking;
+use App\Models\User;
 use App\Services\AvailabilityService;
 use App\Services\GroqClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class AssistantController extends Controller
@@ -91,6 +97,8 @@ class AssistantController extends Controller
             'status'       => 'confirmed',
         ]);
 
+        $this->notifyBookingCreated($booking);
+
         return response()->json([
             'message' => 'Booking confirmed.',
             'booking' => [
@@ -99,6 +107,30 @@ class AssistantController extends Controller
                 'end'   => Carbon::parse($booking->end_time)->format('g:i A'),
             ],
         ]);
+    }
+
+    /**
+     * Emails the client their confirmation and alerts every admin.
+     * Wrapped so that a mail failure (bad SMTP config, etc.) never
+     * breaks the booking itself — the booking is already saved by
+     * the time this runs.
+     */
+    protected function notifyBookingCreated(ConsultationBooking $booking): void
+    {
+        try {
+            Mail::to($booking->email)->send(new ConsultationBookingConfirmedMail($booking));
+        } catch (\Throwable $e) {
+            Log::error('Failed to send booking confirmation email: ' . $e->getMessage());
+        }
+
+        try {
+            $adminEmails = User::role('admin')->pluck('email')->filter();
+            if ($adminEmails->isNotEmpty()) {
+                Mail::to($adminEmails)->send(new NewConsultationBookingAdminMail($booking));
+            }
+        } catch (\Throwable $e) {
+            Log::error('Failed to send booking admin alert email: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -130,10 +162,28 @@ class AssistantController extends Controller
             'message' => $validated['query'],
         ]);
 
+        $this->notifyLiveChatWaiting($session);
+
         return response()->json([
             'session_uuid' => $session->uuid,
             'message' => "Thanks {$validated['name']}! Your message has been sent to our team — someone will reply here shortly.",
         ]);
+    }
+
+    /**
+     * Alerts every admin by email that a visitor is waiting to talk.
+     * Wrapped so a mail failure never breaks the chat handoff itself.
+     */
+    protected function notifyLiveChatWaiting(ChatSession $session): void
+    {
+        try {
+            $adminEmails = User::role('admin')->pluck('email')->filter();
+            if ($adminEmails->isNotEmpty()) {
+                Mail::to($adminEmails)->send(new LiveChatWaitingMail($session));
+            }
+        } catch (\Throwable $e) {
+            Log::error('Failed to send live chat waiting alert email: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -163,11 +213,6 @@ class AssistantController extends Controller
     /**
      * Visitor-side polling: fetch messages newer than a given ID, so the
      * widget can show admin replies without a full page reload.
-     *
-     * FIX: previously omitted `assigned_admin_name` and `admin_typing`,
-     * so the widget's "X has joined the chat" and "X is typing..."
-     * indicators never fired even though the admin side was setting
-     * those fields correctly.
      */
     public function fetchMessages(Request $request, string $uuid)
     {
@@ -181,9 +226,9 @@ class AssistantController extends Controller
             ->get(['id', 'sender', 'message', 'created_at']);
 
         return response()->json([
-            'status'               => $session->status,
-            'assigned_admin_name'  => $session->assigned_admin_name,
-            'admin_typing'         => $session->is_admin_typing,
+            'status'              => $session->status,
+            'admin_typing'        => $session->is_admin_typing,
+            'assigned_admin_name' => $session->assigned_admin_name,
             'messages' => $messages->map(fn ($m) => [
                 'id'         => $m->id,
                 'sender'     => $m->sender,

@@ -13,7 +13,105 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css">
+<style>
+/* Custom theme override — replaces Bootstrap/AdminLTE primary blue with #4F6B63
+   Include this AFTER the bootstrap.min.css and adminlte.min.css links in your layout:
+   <link rel="stylesheet" href="{{ asset('css/custom-theme.css') }}">
+*/
 
+:root,
+[data-bs-theme="light"],
+[data-bs-theme="dark"] {
+    --bs-primary: #4F6B63;
+    --bs-primary-rgb: 79, 107, 99;
+    --bs-primary-text-emphasis: #3d534d;
+    --bs-primary-bg-subtle: #dbe4e1;
+    --bs-primary-border-subtle: #a9bdb7;
+    --bs-link-color: #4F6B63;
+    --bs-link-color-rgb: 79, 107, 99;
+    --bs-link-hover-color: #3d534d;
+    --bs-link-hover-color-rgb: 61, 83, 77;
+}
+
+/* Buttons */
+.btn-primary {
+    --bs-btn-bg: #4F6B63;
+    --bs-btn-border-color: #4F6B63;
+    --bs-btn-hover-bg: #435c55;
+    --bs-btn-hover-border-color: #3d534d;
+    --bs-btn-active-bg: #3d534d;
+    --bs-btn-active-border-color: #374b45;
+    --bs-btn-disabled-bg: #4F6B63;
+    --bs-btn-disabled-border-color: #4F6B63;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: #4F6B63;
+    --bs-btn-border-color: #4F6B63;
+    --bs-btn-hover-bg: #4F6B63;
+    --bs-btn-hover-border-color: #4F6B63;
+    --bs-btn-active-bg: #4F6B63;
+    --bs-btn-active-border-color: #4F6B63;
+}
+
+/* AdminLTE navbar / sidebar / cards */
+.app-sidebar,
+.app-header,
+.card-primary.card-outline {
+    --bs-primary: #4F6B63;
+}
+
+.card-primary.card-outline {
+    border-top-color: #4F6B63 !important;
+}
+
+.card-primary:not(.card-outline) > .card-header,
+.bg-primary,
+.text-bg-primary {
+    background-color: #4F6B63 !important;
+    color: #fff !important;
+}
+
+.text-primary {
+    color: #4F6B63 !important;
+}
+
+.border-primary {
+    border-color: #4F6B63 !important;
+}
+
+/* Sidebar active nav item */
+.app-sidebar .nav-link.active {
+    background-color: #4F6B63 !important;
+    color: #fff !important;
+}
+
+/* Form focus ring */
+.form-control:focus,
+.form-select:focus {
+    border-color: #4F6B63;
+    box-shadow: 0 0 0 0.25rem rgba(79, 107, 99, 0.25);
+}
+
+/* Links */
+a {
+    color: #4F6B63;
+}
+a:hover {
+    color: #3d534d;
+}
+
+/* Badges */
+.badge.text-bg-primary {
+    background-color: #4F6B63 !important;
+}
+
+/* Spinners */
+.spinner-border.text-primary {
+    color: #4F6B63 !important;
+}
+
+</style>
     @stack('styles')
 </head>
 
@@ -59,7 +157,7 @@
     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
 
         {{-- User Image --}}
-        <li class="user-header text-bg-primary text-center p-3">
+        <li class="user-header text-bg- text-center p-3" style="background: linear-gradient(120deg, #3E5B54, #4F6B63, #607570);">
           <img src="{{ auth()->user()->avatar
     ? asset('storage/' . auth()->user()->avatar)
     : asset('assets/img/user2-160x160.jpg') }}"
@@ -84,7 +182,7 @@
 
         {{-- Menu Footer --}}
         <li class="user-footer p-2">
-            <a href="#"
+            <a href="{{ route('profile.edit') }}"
                class="btn btn-outline-secondary">
                 Profile
             </a>

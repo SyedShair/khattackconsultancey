@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewJobApplicationAdminMail;
 use App\Models\Application;
+use App\Models\User;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class PublicVacancyController extends Controller
 {
@@ -59,7 +63,9 @@ class PublicVacancyController extends Controller
         $validated['resume'] = $request->file('resume')->store('resumes', 'local');
         $validated['vacancy_id'] = $vacancy->id;
 
-        Application::create($validated);
+        $application = Application::create($validated);
+
+        $this->notifyNewApplication($application);
 
         return back()->with('status', "Thanks {$validated['name']}, your application for \"{$vacancy->title}\" has been received.");
     }
@@ -87,8 +93,27 @@ class PublicVacancyController extends Controller
         $validated['resume'] = $request->file('resume')->store('resumes', 'local');
         $validated['vacancy_id'] = null;
 
-        Application::create($validated);
+        $application = Application::create($validated);
+
+        $this->notifyNewApplication($application);
 
         return back()->with('status', "Thanks {$validated['name']}, we've received your details and will reach out if a suitable role opens up.");
+    }
+
+    /**
+     * Emails every admin about the new application. Wrapped so a mail
+     * failure never breaks the submission itself — the application is
+     * already saved by the time this runs.
+     */
+    protected function notifyNewApplication(Application $application): void
+    {
+        try {
+            $adminEmails = User::role('admin')->pluck('email')->filter();
+            if ($adminEmails->isNotEmpty()) {
+                Mail::to($adminEmails)->send(new NewJobApplicationAdminMail($application));
+            }
+        } catch (\Throwable $e) {
+            Log::error('Failed to send new application admin alert email: ' . $e->getMessage());
+        }
     }
 }
