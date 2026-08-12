@@ -68,7 +68,7 @@
         position: absolute;
         inset: 0;
         border-radius: 50%;
-        background: linear-gradient(135deg, #00229E, #6E1299, #FE0094);
+        background: linear-gradient(135deg, #3E5B54, #4F6B63, #607570);
         animation: assistantLauncherBlink 2s ease-out infinite;
         pointer-events: none;
         z-index: 1;
@@ -85,8 +85,8 @@
         inset: 0;
         z-index: 2;
         width: 60px; height: 60px; border-radius: 50%; border: none;
-        background: linear-gradient(135deg, #00229E, #6E1299, #FE0094);
-        box-shadow: 0 10px 24px rgba(110, 18, 153, 0.35);
+        background: linear-gradient(135deg, #3E5B54, #4F6B63, #607570);
+        box-shadow: 0 10px 24px rgba(79, 107, 99, 0.35);
         display: flex; align-items: center; justify-content: center;
         cursor: pointer; transition: transform .15s ease;
     }
@@ -133,7 +133,7 @@
     #assistantWidget.open #assistantPanel { display: flex; }
 
     #assistantHeader {
-        background: linear-gradient(120deg, #00229E, #6E1299, #FE0094);
+        background: linear-gradient(120deg, #3E5B54, #4F6B63, #607570);
         color: #fff;
         padding: 14px 16px;
         display: flex;
@@ -160,15 +160,15 @@
     .assistant-msg--user { align-self: flex-end; }
     .assistant-msg__bubble { padding: 9px 13px; border-radius: 14px; display: inline-block; }
     .assistant-msg--bot .assistant-msg__bubble { background: #fff; border: 1px solid #e9e7f3; border-bottom-left-radius: 4px; color: #262135; }
-    .assistant-msg--user .assistant-msg__bubble { background: linear-gradient(120deg, #00229E, #6E1299); color: #fff; border-bottom-right-radius: 4px; }
+    .assistant-msg--user .assistant-msg__bubble { background: linear-gradient(120deg, #3E5B54, #4F6B63); color: #fff; border-bottom-right-radius: 4px; }
 
     .assistant-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 14px; align-self: flex-start; max-width: 100%; }
     .assistant-chip {
-        border: 1.5px solid #6E1299; color: #6E1299; background: #fff;
+        border: 1.5px solid #4F6B63; color: #4F6B63; background: #fff;
         border-radius: 20px; padding: 7px 14px; font-size: 13px; font-weight: 600;
         cursor: pointer; transition: background .15s ease, color .15s ease;
     }
-    .assistant-chip:hover { background: #6E1299; color: #fff; }
+    .assistant-chip:hover { background: #4F6B63; color: #fff; }
     .assistant-chip:disabled { opacity: .4; cursor: not-allowed; }
     .assistant-chip--closed { border-color: #d1d5db; color: #9ca3af; }
     .assistant-chip--closed:hover { background: #fff; color: #9ca3af; cursor: not-allowed; }
@@ -185,11 +185,11 @@
         flex: 1; border: 1.5px solid #e5e3ee; border-radius: 22px; padding: 9px 16px;
         font-size: 13.5px; outline: none; transition: border-color .15s ease;
     }
-    #assistantInput:focus { border-color: #6E1299; }
+    #assistantInput:focus { border-color: #4F6B63; }
     #assistantInput:disabled { background: #f3f3f6; }
     #assistantSendBtn {
         width: 40px; height: 40px; border-radius: 50%; border: none;
-        background: linear-gradient(120deg, #00229E, #6E1299);
+        background: linear-gradient(120deg, #3E5B54, #4F6B63);
         color: #fff; display: flex; align-items: center; justify-content: center;
         cursor: pointer; flex-shrink: 0;
     }
@@ -200,7 +200,6 @@
         #assistantPanel { width: calc(100vw - 32px); right: -8px; }
     }
 </style>
-
 <script>
 (function () {
     const COMPANY_NAME = @json($appSetting->app_name ?? config('app.name'));
@@ -700,3 +699,4 @@
     });
 })();
 </script>
+
