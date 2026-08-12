@@ -10,23 +10,26 @@
 
 <div id="assistantWidget">
 
-    <button id="assistantLauncher" type="button" aria-label="Open chat assistant">
-        <span id="assistantLauncherIcon">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 11.5C21 16.75 16.75 21 11.5 21C9.86 21 8.32 20.58 7 19.84L3 21L4.16 17C3.42 15.68 3 14.14 3 12.5C3 7.25 7.25 3 12.5 3C17.75 3 21 7.25 21 11.5Z" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </span>
-        <span id="assistantLauncherClose">&times;</span>
-        <span id="assistantUnreadBadge">1</span>
-    </button>
+    <div id="assistantLauncherWrap">
+        <div id="assistantLauncherRing"></div>
+        <button id="assistantLauncher" type="button" aria-label="Open chat assistant">
+            <span id="assistantLauncherIcon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 11.5C21 16.75 16.75 21 11.5 21C9.86 21 8.32 20.58 7 19.84L3 21L4.16 17C3.42 15.68 3 14.14 3 12.5C3 7.25 7.25 3 12.5 3C17.75 3 21 7.25 21 11.5Z" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            <span id="assistantLauncherClose">&times;</span>
+            <span id="assistantUnreadBadge">1</span>
+        </button>
+    </div>
 
     <div id="assistantPanel">
 
         <div id="assistantHeader">
             <div class="d-flex align-items-center gap-2">
-
-                <img src="{{asset('website/img/footer/brand__badge__inner.png')}}" alt="" id="assistantHeaderLogo">
-
+                @if($appSetting->logo_url ?? false)
+                    <img src="{{ $appSetting->logo_url }}" alt="" id="assistantHeaderLogo">
+                @endif
                 <div>
                     <div id="assistantHeaderTitle">{{ $appSetting->app_name ?? config('app.name') }}</div>
                     <div id="assistantHeaderStatus"><span class="assistant-dot"></span> Online</div>
@@ -53,36 +56,44 @@
 <style>
     #assistantWidget { position: fixed; right: 24px; bottom: 24px; z-index: 1060; font-family: inherit; }
 
+    /* Wrapper establishes the positioning context for the ring + button,
+       so the ring can sit visually "around" the button using ordinary
+       (non-negative) z-index — avoids stacking-context bugs entirely. */
+    #assistantLauncherWrap { position: relative; width: 60px; height: 60px; }
+
+    /* Blinking attention ring — a real element (not a pseudo-element),
+       painted first so it naturally sits below the button in stacking
+       order. Animates continuously while the widget is closed. */
+    #assistantLauncherRing {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #00229E, #6E1299, #FE0094);
+        animation: assistantLauncherBlink 2s ease-out infinite;
+        pointer-events: none;
+        z-index: 1;
+    }
+    #assistantWidget.open #assistantLauncherRing { animation: none; opacity: 0; }
+    @keyframes assistantLauncherBlink {
+        0%   { transform: scale(1);    opacity: 0.6; }
+        70%  { transform: scale(1.8);  opacity: 0; }
+        100% { transform: scale(1.8);  opacity: 0; }
+    }
+
     #assistantLauncher {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
         width: 60px; height: 60px; border-radius: 50%; border: none;
-        background: linear-gradient(135deg, #3E5B54, #4F6B63, #607570);
-        box-shadow: 0 10px 24px rgba(79, 107, 99, 0.35);
+        background: linear-gradient(135deg, #00229E, #6E1299, #FE0094);
+        box-shadow: 0 10px 24px rgba(110, 18, 153, 0.35);
         display: flex; align-items: center; justify-content: center;
         cursor: pointer; transition: transform .15s ease;
-        position: relative;
     }
     #assistantLauncher:hover { transform: scale(1.06); }
     #assistantLauncherClose { display: none; color: #fff; font-size: 30px; line-height: 1; font-weight: 300; }
     #assistantWidget.open #assistantLauncherIcon { display: none; }
     #assistantWidget.open #assistantLauncherClose { display: block; }
-
-    /* Blinking attention ring — animates continuously while the widget
-       is closed, stops once opened. */
-    #assistantLauncher::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #3E5B54, #4F6B63, #607570);
-        animation: assistantLauncherBlink 2.4s ease-out infinite;
-        z-index: -1;
-    }
-    #assistantWidget.open #assistantLauncher::before { animation: none; opacity: 0; }
-    @keyframes assistantLauncherBlink {
-        0%   { transform: scale(1);   opacity: 0.55; }
-        70%  { transform: scale(1.7); opacity: 0; }
-        100% { transform: scale(1.7); opacity: 0; }
-    }
 
     #assistantUnreadBadge {
         position: absolute;
@@ -100,6 +111,7 @@
         align-items: center;
         justify-content: center;
         border: 2px solid #fff;
+        z-index: 3;
     }
     #assistantUnreadBadge.show { display: flex; }
 
@@ -121,7 +133,7 @@
     #assistantWidget.open #assistantPanel { display: flex; }
 
     #assistantHeader {
-        background: linear-gradient(120deg, #3E5B54, #4F6B63, #607570);
+        background: linear-gradient(120deg, #00229E, #6E1299, #FE0094);
         color: #fff;
         padding: 14px 16px;
         display: flex;
@@ -148,15 +160,15 @@
     .assistant-msg--user { align-self: flex-end; }
     .assistant-msg__bubble { padding: 9px 13px; border-radius: 14px; display: inline-block; }
     .assistant-msg--bot .assistant-msg__bubble { background: #fff; border: 1px solid #e9e7f3; border-bottom-left-radius: 4px; color: #262135; }
-    .assistant-msg--user .assistant-msg__bubble { background: linear-gradient(120deg, #3E5B54, #4F6B63); color: #fff; border-bottom-right-radius: 4px; }
+    .assistant-msg--user .assistant-msg__bubble { background: linear-gradient(120deg, #00229E, #6E1299); color: #fff; border-bottom-right-radius: 4px; }
 
     .assistant-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 14px; align-self: flex-start; max-width: 100%; }
     .assistant-chip {
-        border: 1.5px solid #4F6B63; color: #4F6B63; background: #fff;
+        border: 1.5px solid #6E1299; color: #6E1299; background: #fff;
         border-radius: 20px; padding: 7px 14px; font-size: 13px; font-weight: 600;
         cursor: pointer; transition: background .15s ease, color .15s ease;
     }
-    .assistant-chip:hover { background: #4F6B63; color: #fff; }
+    .assistant-chip:hover { background: #6E1299; color: #fff; }
     .assistant-chip:disabled { opacity: .4; cursor: not-allowed; }
     .assistant-chip--closed { border-color: #d1d5db; color: #9ca3af; }
     .assistant-chip--closed:hover { background: #fff; color: #9ca3af; cursor: not-allowed; }
@@ -173,11 +185,11 @@
         flex: 1; border: 1.5px solid #e5e3ee; border-radius: 22px; padding: 9px 16px;
         font-size: 13.5px; outline: none; transition: border-color .15s ease;
     }
-    #assistantInput:focus { border-color: #4F6B63; }
+    #assistantInput:focus { border-color: #6E1299; }
     #assistantInput:disabled { background: #f3f3f6; }
     #assistantSendBtn {
         width: 40px; height: 40px; border-radius: 50%; border: none;
-        background: linear-gradient(120deg, #3E5B54, #4F6B63);
+        background: linear-gradient(120deg, #00229E, #6E1299);
         color: #fff; display: flex; align-items: center; justify-content: center;
         cursor: pointer; flex-shrink: 0;
     }
@@ -188,23 +200,9 @@
         #assistantPanel { width: calc(100vw - 32px); right: -8px; }
     }
 </style>
+
 <script>
 (function () {
-    // ── Guard against double-initialization ──────────────────────────
-    // If this partial is included more than once on the same page (e.g.
-    // present in both the header and footer, or pulled in by two
-    // different layout sections), the widget's IDs are duplicated in
-    // markup but document.getElementById() only ever finds the first
-    // one — so every script instance ends up attaching its own
-    // listeners and its own polling interval to that SAME single set
-    // of visible elements. That's what causes messages to send/appear
-    // twice. This flag makes any run after the first a no-op.
-    if (window.__assistantWidgetInitialized) {
-        console.warn('Assistant widget already initialized — skipping duplicate init. This partial is likely included more than once in the layout.');
-        return;
-    }
-    window.__assistantWidgetInitialized = true;
-
     const COMPANY_NAME = @json($appSetting->app_name ?? config('app.name'));
     const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').content;
     const STORAGE_KEY = 'assistant_chat_uuid';
@@ -231,7 +229,6 @@
     let unreadCount = 0;
     let assignedAdminName = null;
     let adminTypingIndicatorShown = false;
-    let isSubmitting = false; // second line of defense against double-submit
 
     function scrollToBottom() {
         messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -254,16 +251,9 @@
         if (!online) headerStatus.querySelector('.assistant-dot').style.background = '#f59e0b';
     }
 
-    // msgId is optional — pass the server message id for anything that
-    // came from a poll/fetch response, so it can be de-duplicated if
-    // it's ever rendered twice (belt-and-braces alongside the init guard).
-    function addBotMessage(html, msgId = null) {
-        if (msgId !== null && messagesEl.querySelector(`[data-msg-id="${msgId}"]`)) {
-            return;
-        }
+    function addBotMessage(html) {
         const el = document.createElement('div');
         el.className = 'assistant-msg assistant-msg--bot';
-        if (msgId !== null) el.dataset.msgId = msgId;
         el.innerHTML = `<div class="assistant-msg__bubble">${html}</div>`;
         messagesEl.appendChild(el);
         scrollToBottom();
@@ -610,7 +600,7 @@
                 addBotMessage("Welcome back! Continuing your conversation with our team below.");
                 payload.messages.forEach(m => {
                     if (m.sender === 'visitor') addUserMessage(m.message);
-                    else addBotMessage(escapeHtml(m.message), m.id);
+                    else addBotMessage(escapeHtml(m.message));
                     lastChatMessageId = Math.max(lastChatMessageId, m.id);
                 });
                 if (payload.assigned_admin_name) {
@@ -692,7 +682,7 @@
                     hideTyping();
                     adminTypingIndicatorShown = false;
                     payload.messages.forEach(m => {
-                        if (m.sender !== 'visitor') addBotMessage(escapeHtml(m.message), m.id);
+                        if (m.sender !== 'visitor') addBotMessage(escapeHtml(m.message));
                         lastChatMessageId = Math.max(lastChatMessageId, m.id);
                     });
                 }
@@ -705,18 +695,8 @@
         e.preventDefault();
         const text = input.value.trim();
         if (!text || input.disabled) return;
-
-        // Guard against a double-fire submit event (rapid Enter/click).
-        if (isSubmitting) return;
-        isSubmitting = true;
-
         input.value = '';
         activeSubmitHandler(text);
-
-        // Release the guard on the next tick — activeSubmitHandler calls
-        // are fire-and-forget (not awaited here), so this just needs to
-        // block a same-tick double dispatch, not the whole request.
-        setTimeout(() => { isSubmitting = false; }, 300);
     });
 })();
 </script>
