@@ -114,7 +114,7 @@ class HeroSlideController extends Controller
     {
         return $request->validate([
             'title'             => ['required', 'string', 'max:150'],
-            'description'       => ['nullable', 'string', 'max:500'],
+            'description'       => ['nullable', 'string', 'max:5000'],
             'button_text'       => ['nullable', 'string', 'max:50'],
             'button_link'       => ['nullable', 'string', 'max:255'],
             'background_image'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],

@@ -136,7 +136,32 @@ a:hover {
 
             <ul class="navbar-nav ms-auto align-items-center">
 
-               
+                {{-- ============== Activity Log widget (bell dropdown) ============== --}}
+                @auth
+                    <li class="nav-item dropdown" id="activityWidget">
+                        <a href="#" class="nav-link position-relative" data-bs-toggle="dropdown"
+                           aria-expanded="false" id="activityBellToggle">
+                            <i class="bi bi-clock-history fs-5"></i>
+                            <span class="badge text-bg-danger position-absolute d-none"
+                                  id="activityBellBadge"
+                                  style="top:2px; right:-2px; font-size:10px; padding:3px 5px;">0</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" style="width: 340px;" id="activityDropdownMenu">
+                            <li class="px-3 py-2 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold small">Recent Activity</span>
+                                <a href="{{ url('/admin/activity-logs') }}" class="small">View all</a>
+                            </li>
+                            <li>
+                                <div id="activityList" style="max-height: 320px; overflow-y: auto;">
+                                    <div class="text-center text-muted small py-4" id="activityLoading">
+                                        <div class="spinner-border spinner-border-sm"></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                @endauth
+
                 @auth
                    <li class="nav-item dropdown user-menu">
     <a href="#"
@@ -272,9 +297,8 @@ a:hover {
                         </ul>
                     </li>
 
-                   
- <li class="nav-header">RECRUITMENT</li>
- 
+                    <li class="nav-header">RECRUITMENT</li>
+
                     <li class="nav-item has-treeview {{ request()->is('admin/vacancies*', 'admin/applications*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('admin/vacancies*', 'admin/applications*') ? 'active' : '' }}">
                             <i class="nav-icon bi bi-briefcase"></i>
@@ -284,7 +308,7 @@ a:hover {
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
- 
+
                             <li class="nav-item">
                                 <a href="{{ url('/admin/vacancies') }}"
                                    class="nav-link {{ request()->is('admin/vacancies*') ? 'active' : '' }}">
@@ -292,7 +316,7 @@ a:hover {
                                     <p>Vacancies</p>
                                 </a>
                             </li>
- 
+
                             <li class="nav-item">
                                 <a href="{{ url('/admin/applications') }}"
                                    class="nav-link {{ request()->is('admin/applications*') ? 'active' : '' }}">
@@ -300,89 +324,137 @@ a:hover {
                                     <p>Applications</p>
                                 </a>
                             </li>
- 
+
                         </ul>
                     </li>
-   <li class="nav-header">WEBSITE CONTENT</li>
- 
-                    <li class="nav-item">
-                        <a href="{{ url('/admin/hero-slides') }}"
-                           class="nav-link {{ request()->is('admin/hero-slides*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-images"></i>
-                            <p>Hero Slides</p>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="{{ url('/admin/services') }}"
-                           class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-grid-3x3-gap"></i>
-                            <p>Services</p>
-                        </a>
-                    </li>
-                     <li class="nav-item">
-                        <a href="{{ url('/admin/team-members') }}"
-                           class="nav-link {{ request()->is('admin/team-members*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-people-fill"></i>
-                            <p>Team Members</p>
-                        </a>
-                    </li>
-                      <li class="nav-item">
-                        <a href="{{ url('/admin/contact-messages') }}"
-                           class="nav-link {{ request()->is('admin/contact-messages*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-envelope-open"></i>
-                            <p>Contact Messages</p>
-                        </a>
-                    </li>
-                     <li class="nav-item">
-                        <a href="{{ url('/admin/projects') }}"
-                           class="nav-link {{ request()->is('admin/projects*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-kanban"></i>
-                            <p>Projects</p>
-                        </a>
-                    </li>
 
-                    
-                    <li class="nav-item">
-                        <a href="{{ url('/admin/pricing-plans') }}"
-                           class="nav-link {{ request()->is('admin/pricing-plans*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-tags"></i>
-                            <p>Pricing Plans</p>
-                        </a>
-                    </li>
-                   
-                    <li class="nav-header">ASSISTANT</li>
- 
-                    <li class="nav-item">
-                        <a href="{{ url('/admin/consultation-bookings') }}"
-                           class="nav-link {{ request()->is('admin/consultation-bookings*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-calendar-check"></i>
-                            <p>Consultation Bookings</p>
-                        </a>
-                    </li>
- 
-                    <li class="nav-item">
-                        <a href="{{ url('/admin/live-chat') }}"
-                           class="nav-link {{ request()->is('admin/live-chat*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-chat-dots"></i>
+                    <li class="nav-header">WEBSITE CONTENT</li>
+
+                    <li class="nav-item has-treeview {{ request()->is('admin/hero-slides*', 'admin/services*', 'admin/team-members*', 'admin/contact-messages*', 'admin/projects*', 'admin/pricing-plans*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->is('admin/hero-slides*', 'admin/services*', 'admin/team-members*', 'admin/contact-messages*', 'admin/projects*', 'admin/pricing-plans*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-layout-text-window-reverse"></i>
                             <p>
-                                Live Chat
-                                <span class="badge text-bg-danger ms-auto d-none" id="liveChatBadge">0</span>
+                                Website Content
+                                <i class="nav-arrow bi bi-chevron-right"></i>
                             </p>
                         </a>
-                    </li>
- 
+                        <ul class="nav nav-treeview">
 
-
-
-                     <li class="nav-header">App Settings</li>
                             <li class="nav-item">
-                                <a href="{{ url('/settings') }}"
-                                   class="nav-link {{ request()->is('settings*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-gear"></i>
-                                    <p>Settings</p>
+                                <a href="{{ url('/admin/hero-slides') }}"
+                                   class="nav-link {{ request()->is('admin/hero-slides*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-images"></i>
+                                    <p>Hero Slides</p>
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ url('/admin/services') }}"
+                                   class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-grid-3x3-gap"></i>
+                                    <p>Services</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ url('/admin/team-members') }}"
+                                   class="nav-link {{ request()->is('admin/team-members*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-people-fill"></i>
+                                    <p>Team Members</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ url('/admin/contact-messages') }}"
+                                   class="nav-link {{ request()->is('admin/contact-messages*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-envelope-open"></i>
+                                    <p>Contact Messages</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ url('/admin/projects') }}"
+                                   class="nav-link {{ request()->is('admin/projects*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-kanban"></i>
+                                    <p>Projects</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ url('/admin/pricing-plans') }}"
+                                   class="nav-link {{ request()->is('admin/pricing-plans*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-tags"></i>
+                                    <p>Pricing Plans</p>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li class="nav-header">ASSISTANT</li>
+
+                    <li class="nav-item has-treeview {{ request()->is('admin/consultation-bookings*', 'admin/live-chat*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->is('admin/consultation-bookings*', 'admin/live-chat*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-robot"></i>
+                            <p>
+                                Assistant
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+
+                            <li class="nav-item">
+                                <a href="{{ url('/admin/consultation-bookings') }}"
+                                   class="nav-link {{ request()->is('admin/consultation-bookings*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-calendar-check"></i>
+                                    <p>Consultation Bookings</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ url('/admin/live-chat') }}"
+                                   class="nav-link {{ request()->is('admin/live-chat*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-chat-dots"></i>
+                                    <p>
+                                        Live Chat
+                                        <span class="badge text-bg-danger ms-auto d-none" id="liveChatBadge">0</span>
+                                    </p>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li class="nav-header">AUDIT</li>
+
+                    <li class="nav-item has-treeview {{ request()->is('admin/activity-logs*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->is('admin/activity-logs*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-shield-check"></i>
+                            <p>
+                                Audit
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+
+                            <li class="nav-item">
+                                <a href="{{ url('/admin/activity-logs') }}"
+                                   class="nav-link {{ request()->is('admin/activity-logs*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-clock-history"></i>
+                                    <p>Activity Log</p>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ url('/settings') }}"
+                           class="nav-link {{ request()->is('settings*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-gear"></i>
+                            <p>Settings</p>
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -441,9 +513,82 @@ a:hover {
 
 </div>
 
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
+
+@auth
+<script>
+(function () {
+    const activityList = document.getElementById('activityList');
+    const activityBadge = document.getElementById('activityBellBadge');
+    const bellToggle = document.getElementById('activityBellToggle');
+    if (!activityList || !bellToggle) return;
+
+    const dataUrl = "{{ url('/admin/activity-logs/data') }}";
+    let loaded = false;
+
+    const actionIcon = {
+        login:   'bi-box-arrow-in-right text-success',
+        logout:  'bi-box-arrow-left text-secondary',
+        created: 'bi-plus-circle text-primary',
+        updated: 'bi-pencil-square text-warning',
+        deleted: 'bi-trash text-danger',
+    };
+
+    function renderActivity(items) {
+        if (items.length === 0) {
+            activityList.innerHTML = `<div class="text-center text-muted small py-4">No recent activity.</div>`;
+            return;
+        }
+
+        activityList.innerHTML = items.map(log => `
+            <div class="px-3 py-2 border-bottom d-flex gap-2 align-items-start">
+                <i class="bi ${actionIcon[log.action] ?? 'bi-dot'} mt-1"></i>
+                <div class="flex-grow-1" style="min-width:0;">
+                    <div class="small text-truncate">${log.description}</div>
+                    <div class="text-muted" style="font-size:11px;">${log.user_name} · ${log.created_human}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function loadActivity() {
+        fetch(`${dataUrl}?per_page=8`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(res => res.json())
+            .then(payload => {
+                renderActivity(payload.data);
+
+                // Badge shows how many activity entries happened today.
+                const todayCount = payload.data.filter(log => log.created_human.includes('second') || log.created_human.includes('minute') || log.created_human.includes('hour')).length;
+                if (todayCount > 0) {
+                    activityBadge.textContent = todayCount > 9 ? '9+' : String(todayCount);
+                    activityBadge.classList.remove('d-none');
+                } else {
+                    activityBadge.classList.add('d-none');
+                }
+            })
+            .catch(() => {
+                activityList.innerHTML = `<div class="text-center text-muted small py-4">Could not load activity.</div>`;
+            });
+    }
+
+    // Load once on page load (for the badge), and refresh the list every
+    // time the dropdown is opened so it's always current without polling
+    // constantly in the background.
+    loadActivity();
+    bellToggle.addEventListener('click', () => {
+        if (!loaded) {
+            loaded = true;
+        }
+        loadActivity();
+    });
+
+    setInterval(loadActivity, 60000); // keep the badge fresh in the background
+})();
+</script>
+@endauth
 
 @stack('scripts')
 

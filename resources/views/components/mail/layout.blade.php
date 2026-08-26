@@ -23,7 +23,8 @@
                                 <tr>
                                     <td>
                                         @if($appSetting->logo ?? false)
-                                            <img src="{{ $appSetting->logo }}" alt="{{ $companyName }}" height="32" style="display:block; border-radius:6px;">
+
+                                            <img src="{{ Storage::url($appSetting->logo) }}"" alt="{{ $companyName }}" height="32" style="display:block; border-radius:6px;">
                                         @else
                                             <span style="color:#ffffff; font-size:18px; font-weight:700;">{{ $companyName }}</span>
                                         @endif

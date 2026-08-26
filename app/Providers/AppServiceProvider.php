@@ -5,6 +5,12 @@ namespace App\Providers;
 use App\Models\Setting;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
+use Illuminate\Support\Facades\Event;
+use App\Listeners\LogUserLogin;
+use App\Listeners\LogUserLogout;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,5 +33,8 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $view->with('appSetting', once(fn () => Setting::first()));
         });
+        
+        Event::listen(Login::class, LogUserLogin::class);
+        Event::listen(Logout::class, LogUserLogout::class);
     }
 }

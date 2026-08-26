@@ -26,7 +26,7 @@
                                         </div>
                                         @if($slide->description)
                                             <div class="herobanner__text">
-                                                <p>{{ $slide->description }}</p>
+                                                <p>{!! $slide->description !!}</p>
                                             </div>
                                         @endif
                                         @if($slide->button_text)
@@ -91,7 +91,7 @@
     </div>
     <div class="herobanner__icon">
         <img class="herobanner__vector hero__icon__1" src="{{ asset('website/img/herobaner/vector__1.png') }}" alt="Vector photo">
-        <img class="herobanner__vector hero__icon__2" src="{{ asset('website/img/herobaner/vector__2.png') }}" alt="Vector photo">
+        <img class="herobanner__vector hero__icon__2" src="{{ asset('website/img/herobaner/Vector__2.png') }}" alt="Vector photo">
         <img class="herobanner__vector hero__icon__3" src="{{ asset('website/img/herobaner/vector__3.png') }}" alt="Vector photo">
         <img class="herobanner__vector hero__icon__4" src="{{ asset('website/img/herobaner/vector__4.png') }}" alt="Vector photo">
     </div>
@@ -609,121 +609,309 @@ We are dedicated to providing personalized services tailored to meet the unique 
 
 @php
     $teamMembers = \App\Models\TeamMember::active()->get();
+
     $fallbackTeam = [
-        ['name' => 'GINGER GRIFFITH', 'designation' => 'Founder & CEO', 'photo' => asset('website/img/team/team_5.png')],
-        ['name' => 'SABRINA TUCKER', 'designation' => 'Project Manager', 'photo' => asset('website/img/team/team_6.png')],
-        ['name' => 'WILLIAM GURRERO', 'designation' => 'Web Developer', 'photo' => asset('website/img/team/team_7.png')],
-        ['name' => 'MARION GRAHAM', 'designation' => 'UI/UX Designer', 'photo' => asset('website/img/team/team_8.png')],
+        [
+            'name' => 'GINGER GRIFFITH',
+            'designation' => 'Founder & CEO',
+            'photo' => asset('website/img/team/team_5.png'),
+        ],
+        [
+            'name' => 'SABRINA TUCKER',
+            'designation' => 'Project Manager',
+            'photo' => asset('website/img/team/team_6.png'),
+        ],
+        [
+            'name' => 'WILLIAM GURRERO',
+            'designation' => 'Web Developer',
+            'photo' => asset('website/img/team/team_7.png'),
+        ],
+        [
+            'name' => 'MARION GRAHAM',
+            'designation' => 'UI/UX Designer',
+            'photo' => asset('website/img/team/team_8.png'),
+        ],
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Use database team members if available.
+    | Otherwise use fallback team.
+    |--------------------------------------------------------------------------
+    */
+    $members = $teamMembers->isNotEmpty()
+        ? $teamMembers
+        : collect($fallbackTeam);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dynamic Bootstrap column
+    |
+    | 1 member  = col-xl-12
+    | 2 members = col-xl-6
+    | 3 members = col-xl-4
+    | 4+        = col-xl-3
+    |--------------------------------------------------------------------------
+    */
+    $teamCount = $members->count();
+
+    $teamColumnClass = match (true) {
+        $teamCount === 1 => 'col-xl-12 col-lg-12 col-md-12',
+        $teamCount === 2 => 'col-xl-6 col-lg-6 col-md-6',
+        $teamCount === 3 => 'col-xl-4 col-lg-4 col-md-6',
+        default => 'col-xl-3 col-lg-6 col-md-6',
+    };
 @endphp
 
+
 <!-- team__member__start -->
-<div class="team__member sp_top_140 sp_bottom_140" data-aos="fade-up" data-aos-duration="1500">
+<div class="team__member sp_top_140 sp_bottom_140"
+     data-aos="fade-up"
+     data-aos-duration="1500">
+
     <div class="container">
+
+        <!-- Section Title -->
         <div class="row">
             <div class="col-xl-12">
+
                 <div class="section__title text-center sp_bottom_90">
+
                     <div class="section__title__button">
-                        <span class="text__gradient">Our Team</span>
+                        <span class="text__gradient">
+                            Our Team
+                        </span>
                     </div>
+
                     <div class="section__title__heading">
-                        <h3>MEET THE PEOPLE BEHIND OUR WORK.</h3>
+                        <h3>
+                            MEET THE PEOPLE BEHIND OUR WORK.
+                        </h3>
                     </div>
+
                 </div>
+
             </div>
         </div>
+
+
+        <!-- Team Slider -->
         <div class="row position-relative">
 
             <div class="team__slider__active swiper team__padding">
+
                 <div class="swiper-wrapper">
 
-                    @forelse($teamMembers as $index => $member)
-                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 swiper-slide" data-aos="fade-up" data-aos-duration="{{ 1500 + $index * 300 }}">
+                    @foreach($members as $index => $member)
+
+                        @php
+                            /*
+                            |--------------------------------------------------------------------------
+                            | Determine whether this is a database model
+                            | or fallback array.
+                            |--------------------------------------------------------------------------
+                            */
+                            $isModel = $member instanceof \App\Models\TeamMember;
+
+                            if ($isModel) {
+                                $name = $member->name;
+                                $designation = $member->designation;
+                                $photo = $member->photo_url
+                                    ?? asset('website/img/team/team_5.png');
+
+                                $link = $member->link_or_default;
+                                $facebook = $member->facebook_url;
+                                $twitter = $member->twitter_url;
+                                $skype = $member->skype_url;
+                            } else {
+                                $name = $member['name'];
+                                $designation = $member['designation'];
+                                $photo = $member['photo'];
+
+                                $link = '#';
+                                $facebook = null;
+                                $twitter = null;
+                                $skype = null;
+                            }
+                        @endphp
+
+
+                        <!-- Team Single -->
+                        <div class="{{ $teamColumnClass }} col-sm-12 col-12 swiper-slide"
+                             data-aos="fade-up"
+                             data-aos-duration="{{ 1500 + ($index * 300) }}">
+
                             <div class="team__member__single common__gradient__bg single__transform">
+
                                 <div class="team__member__single__inner">
+
+
+                                    <!-- Team Image -->
                                     <div class="team__member__img">
-                                        <img src="{{ $member->photo_url ?? asset('website/img/team/team_5.png') }}" alt="{{ $member->name }}">
+
+                                        <img src="{{ $photo }}"
+                                             alt="{{ $name }}">
+
                                     </div>
 
+
+                                    <!-- Team Name -->
                                     <div class="team__member__name">
-                                        <h6><a href="{{ $member->link_or_default }}">{{ strtoupper($member->name) }}</a></h6>
-                                        @if($member->designation)
-                                            <p>{{ $member->designation }}</p>
+
+                                        <h6>
+                                            <a href="{{ $link }}">
+                                                {{ strtoupper($name) }}
+                                            </a>
+                                        </h6>
+
+                                        @if($designation)
+                                            <p>
+                                                {{ $designation }}
+                                            </p>
                                         @endif
+
                                     </div>
+
+
+                                    <!-- Social Icons -->
                                     <div class="team__member__icon team__member__icon--2">
+
                                         <ul>
-                                            @if($member->facebook_url)
-                                                <li><a href="{{ $member->facebook_url }}" target="_blank"><i class="icofont-facebook"></i></a></li>
+
+                                            @if($facebook)
+                                                <li>
+                                                    <a href="{{ $facebook }}"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+
+                                                        <i class="icofont-facebook"></i>
+
+                                                    </a>
+                                                </li>
                                             @endif
-                                            @if($member->twitter_url)
-                                                <li><a href="{{ $member->twitter_url }}" target="_blank"><i class="icofont-twitter"></i></a></li>
+
+
+                                            @if($twitter)
+                                                <li>
+                                                    <a href="{{ $twitter }}"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+
+                                                        <i class="icofont-twitter"></i>
+
+                                                    </a>
+                                                </li>
                                             @endif
-                                            @if($member->skype_url)
-                                                <li><a href="{{ $member->skype_url }}" target="_blank"><i class="icofont-skype"></i></a></li>
+
+
+                                            @if($skype)
+                                                <li>
+                                                    <a href="{{ $skype }}"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+
+                                                        <i class="icofont-linkedin"></i>
+
+                                                    </a>
+                                                </li>
                                             @endif
+
                                         </ul>
+
                                     </div>
+
+
                                 </div>
+
                             </div>
+
                         </div>
-                    @empty
-                        {{-- No team members configured yet in admin — sensible defaults so this section never looks empty --}}
-                        @foreach($fallbackTeam as $index => $fallback)
-                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 swiper-slide" data-aos="fade-up" data-aos-duration="{{ 1500 + $index * 300 }}">
-                                <div class="team__member__single common__gradient__bg single__transform">
-                                    <div class="team__member__single__inner">
-                                        <div class="team__member__img">
-                                            <img src="{{ $fallback['photo'] }}" alt="{{ $fallback['name'] }}">
-                                        </div>
-                                        <div class="team__member__name">
-                                            <h6><a href="#">{{ $fallback['name'] }}</a></h6>
-                                            <p>{{ $fallback['designation'] }}</p>
-                                        </div>
-                                        <div class="team__member__icon team__member__icon--2">
-                                            <ul>
-                                                <li><a href="#"><i class="icofont-facebook"></i></a></li>
-                                                <li><a href="#"><i class="icofont-twitter"></i></a></li>
-                                                <li><a href="#"><i class="icofont-skype"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @endforelse
+                        <!-- Team Single End -->
+
+
+                    @endforeach
 
                 </div>
+
             </div>
 
+
+            <!-- Slider Controls -->
             <div class="slider__controls__wrap slider__controls__pagination slider__controls__arrows">
+
+
+                <!-- Next Button -->
                 <div class="swiper-button-next arrow-btn arrow-btn-2">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M14.4297 5.92999L20.4997 12L14.4297 18.07" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M3.5 12H20.33" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+
+                    <svg width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+
+                        <path d="M14.4297 5.92999L20.4997 12L14.4297 18.07"
+                              stroke="#fff"
+                              stroke-width="1.5"
+                              stroke-miterlimit="10"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+
+                        <path d="M3.5 12H20.33"
+                              stroke="#fff"
+                              stroke-width="1.5"
+                              stroke-miterlimit="10"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+
                     </svg>
+
                 </div>
+
+
+                <!-- Previous Button -->
                 <div class="swiper-button-prev arrow-btn arrow-btn-2">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9.57031 5.92999L3.50031 12L9.57031 18.07" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M20.5 12H3.67" stroke="#fff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+
+                    <svg width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+
+                        <path d="M9.57031 5.92999L3.50031 12L9.57031 18.07"
+                              stroke="#fff"
+                              stroke-width="1.5"
+                              stroke-miterlimit="10"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+
+                        <path d="M20.5 12H3.67"
+                              stroke="#fff"
+                              stroke-width="1.5"
+                              stroke-miterlimit="10"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+
                     </svg>
+
                 </div>
+
             </div>
+            <!-- Slider Controls End -->
+
 
         </div>
+
     </div>
+
 </div>
 <!-- team__member__end -->
 
 
-        <!-- pink__color__start -->
-           <!-- <div class="pink__color"> </div>         -->
-         
-
 
 
 <!-- contact__section__start -->
+
+
 <div class="contact sp_bottom_140" id="tb__contact">
     <div class="container">
         <div class="row">

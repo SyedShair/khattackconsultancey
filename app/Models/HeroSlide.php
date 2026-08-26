@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\LogsActivity;
+
 
 class HeroSlide extends Model
 {
+    use LogsActivity;
     protected $fillable = [
         'title',
         'description',

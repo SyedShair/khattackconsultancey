@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -18,7 +19,8 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VacancyController;
-use App\Http\Controllers\ProfileController;
+            use App\Http\Controllers\ProfileController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -58,13 +60,6 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-
-
-Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::post('/profile/update-info', [ProfileController::class, 'updateInfo'])->name('profile.updateInfo');
-Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.updateAvatar');
-Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
-
 
     Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
 
@@ -168,6 +163,19 @@ Route::post('/profile/update-password', [ProfileController::class, 'updatePasswo
             Route::post('pricing-plans/{pricingPlan}/toggle-active', [PricingPlanController::class, 'toggleActive'])->name('pricing-plans.toggleActive');
             Route::post('pricing-plans/{pricingPlan}/toggle-popular', [PricingPlanController::class, 'togglePopular'])->name('pricing-plans.togglePopular');
             Route::post('pricing-plans/reorder', [PricingPlanController::class, 'reorder'])->name('pricing-plans.reorder');
+
+            Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+            Route::get('activity-logs/data', [ActivityLogController::class, 'data'])->name('activity-logs.data');
+            
+            
+
+
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
 
             Route::get('live-chat', [LiveChatController::class, 'index'])->name('live-chat.index');
             Route::get('live-chat/data', [LiveChatController::class, 'data'])->name('live-chat.data');

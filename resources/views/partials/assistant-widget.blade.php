@@ -6,30 +6,37 @@
      - "2. Talk to Our Team" collects details, opens a live chat
        session that admins can reply to from /admin/live-chat
      - Any freeform typed message is answered by Groq AI
+
+     Responsive behaviour:
+     - >576px wide & >420px tall: floating panel, bottom-right
+     - <=576px wide OR <=420px tall (phones, landscape phones):
+       panel becomes a full-screen overlay, like a native chat app
+     - Safe-area insets respected for notched/home-indicator devices
+     - Background page scroll is locked only while the full-screen
+       panel is open on a small screen, and only via a class toggle
+       on <body> — reverted immediately on close/resize, so it never
+       permanently affects the host page's layout.
    ============================================================ --}}
 
 <div id="assistantWidget">
 
-    <div id="assistantLauncherWrap">
-        <div id="assistantLauncherRing"></div>
-        <button id="assistantLauncher" type="button" aria-label="Open chat assistant">
-            <span id="assistantLauncherIcon">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21 11.5C21 16.75 16.75 21 11.5 21C9.86 21 8.32 20.58 7 19.84L3 21L4.16 17C3.42 15.68 3 14.14 3 12.5C3 7.25 7.25 3 12.5 3C17.75 3 21 7.25 21 11.5Z" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </span>
-            <span id="assistantLauncherClose">&times;</span>
-            <span id="assistantUnreadBadge">1</span>
-        </button>
-    </div>
+    <button id="assistantLauncher" type="button" aria-label="Open chat assistant">
+        <span id="assistantLauncherIcon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 11.5C21 16.75 16.75 21 11.5 21C9.86 21 8.32 20.58 7 19.84L3 21L4.16 17C3.42 15.68 3 14.14 3 12.5C3 7.25 7.25 3 12.5 3C17.75 3 21 7.25 21 11.5Z" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </span>
+        <span id="assistantLauncherClose">&times;</span>
+        <span id="assistantUnreadBadge">1</span>
+    </button>
 
     <div id="assistantPanel">
 
         <div id="assistantHeader">
             <div class="d-flex align-items-center gap-2">
-                @if($appSetting->logo_url ?? false)
-                    <img src="{{ $appSetting->logo_url }}" alt="" id="assistantHeaderLogo">
-                @endif
+
+                <img src="{{asset('website/img/footer/brand__badge__inner.png')}}" alt="" id="assistantHeaderLogo">
+
                 <div>
                     <div id="assistantHeaderTitle">{{ $appSetting->app_name ?? config('app.name') }}</div>
                     <div id="assistantHeaderStatus"><span class="assistant-dot"></span> Online</div>
@@ -54,46 +61,45 @@
 </div>
 
 <style>
-    #assistantWidget { position: fixed; right: 24px; bottom: 24px; z-index: 1060; font-family: inherit; }
-
-    /* Wrapper establishes the positioning context for the ring + button,
-       so the ring can sit visually "around" the button using ordinary
-       (non-negative) z-index — avoids stacking-context bugs entirely. */
-    #assistantLauncherWrap { position: relative; width: 60px; height: 60px; }
-
-    /* Blinking attention ring — a real element (not a pseudo-element),
-       painted first so it naturally sits below the button in stacking
-       order. Animates continuously while the widget is closed. */
-    #assistantLauncherRing {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #3E5B54, #4F6B63, #607570);
-        animation: assistantLauncherBlink 2s ease-out infinite;
-        pointer-events: none;
-        z-index: 1;
-    }
-    #assistantWidget.open #assistantLauncherRing { animation: none; opacity: 0; }
-    @keyframes assistantLauncherBlink {
-        0%   { transform: scale(1);    opacity: 0.6; }
-        70%  { transform: scale(1.8);  opacity: 0; }
-        100% { transform: scale(1.8);  opacity: 0; }
+    #assistantWidget {
+        position: fixed;
+        right: max(24px, env(safe-area-inset-right));
+        bottom: max(24px, env(safe-area-inset-bottom));
+        z-index: 1060;
+        font-family: inherit;
     }
 
     #assistantLauncher {
-        position: absolute;
-        inset: 0;
-        z-index: 2;
         width: 60px; height: 60px; border-radius: 50%; border: none;
         background: linear-gradient(135deg, #3E5B54, #4F6B63, #607570);
         box-shadow: 0 10px 24px rgba(79, 107, 99, 0.35);
         display: flex; align-items: center; justify-content: center;
         cursor: pointer; transition: transform .15s ease;
+        position: relative;
+        flex-shrink: 0;
     }
     #assistantLauncher:hover { transform: scale(1.06); }
     #assistantLauncherClose { display: none; color: #fff; font-size: 30px; line-height: 1; font-weight: 300; }
     #assistantWidget.open #assistantLauncherIcon { display: none; }
     #assistantWidget.open #assistantLauncherClose { display: block; }
+
+    /* Blinking attention ring — animates continuously while the widget
+       is closed, stops once opened. */
+    #assistantLauncher::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3E5B54, #4F6B63, #607570);
+        animation: assistantLauncherBlink 2.4s ease-out infinite;
+        z-index: -1;
+    }
+    #assistantWidget.open #assistantLauncher::before { animation: none; opacity: 0; }
+    @keyframes assistantLauncherBlink {
+        0%   { transform: scale(1);   opacity: 0.55; }
+        70%  { transform: scale(1.7); opacity: 0; }
+        100% { transform: scale(1.7); opacity: 0; }
+    }
 
     #assistantUnreadBadge {
         position: absolute;
@@ -111,7 +117,6 @@
         align-items: center;
         justify-content: center;
         border: 2px solid #fff;
-        z-index: 3;
     }
     #assistantUnreadBadge.show { display: flex; }
 
@@ -139,23 +144,26 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-shrink: 0;
     }
-    #assistantHeaderLogo { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #fff; }
+    #assistantHeaderLogo { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #fff; flex-shrink: 0; }
     #assistantHeaderTitle { font-weight: 700; font-size: 15px; }
     #assistantHeaderStatus { font-size: 12px; opacity: .9; display: flex; align-items: center; gap: 5px; }
-    .assistant-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; display: inline-block; }
-    #assistantCloseBtn { background: none; border: none; color: #fff; font-size: 22px; line-height: 1; cursor: pointer; }
+    .assistant-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; display: inline-block; flex-shrink: 0; }
+    #assistantCloseBtn { background: none; border: none; color: #fff; font-size: 22px; line-height: 1; cursor: pointer; flex-shrink: 0; padding: 4px; }
 
     #assistantMessages {
         flex: 1;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
         padding: 16px;
         background: #f7f7fb;
         display: flex;
         flex-direction: column;
+        min-height: 0;
     }
 
-    .assistant-msg { max-width: 82%; margin-bottom: 10px; font-size: 13.5px; line-height: 1.45; }
+    .assistant-msg { max-width: 82%; margin-bottom: 10px; font-size: 13.5px; line-height: 1.45; word-break: break-word; }
     .assistant-msg--bot { align-self: flex-start; }
     .assistant-msg--user { align-self: flex-end; }
     .assistant-msg__bubble { padding: 9px 13px; border-radius: 14px; display: inline-block; }
@@ -167,6 +175,7 @@
         border: 1.5px solid #4F6B63; color: #4F6B63; background: #fff;
         border-radius: 20px; padding: 7px 14px; font-size: 13px; font-weight: 600;
         cursor: pointer; transition: background .15s ease, color .15s ease;
+        max-width: 100%;
     }
     .assistant-chip:hover { background: #4F6B63; color: #fff; }
     .assistant-chip:disabled { opacity: .4; cursor: not-allowed; }
@@ -180,9 +189,9 @@
     .assistant-typing span:nth-child(3) { animation-delay: .4s; }
     @keyframes assistantTypingBlink { 0%, 80%, 100% { opacity: .3; } 40% { opacity: 1; } }
 
-    #assistantInputForm { display: flex; gap: 8px; padding: 12px; border-top: 1px solid #eee; background: #fff; }
+    #assistantInputForm { display: flex; gap: 8px; padding: 12px; border-top: 1px solid #eee; background: #fff; flex-shrink: 0; }
     #assistantInput {
-        flex: 1; border: 1.5px solid #e5e3ee; border-radius: 22px; padding: 9px 16px;
+        flex: 1; min-width: 0; border: 1.5px solid #e5e3ee; border-radius: 22px; padding: 9px 16px;
         font-size: 13.5px; outline: none; transition: border-color .15s ease;
     }
     #assistantInput:focus { border-color: #4F6B63; }
@@ -195,13 +204,69 @@
     }
     #assistantSendBtn:disabled { opacity: .5; cursor: not-allowed; }
 
-    @media (max-width: 480px) {
-        #assistantWidget { right: 16px; bottom: 16px; }
-        #assistantPanel { width: calc(100vw - 32px); right: -8px; }
+    /* ── Small tablets / large phones: shrink the floating panel a touch ── */
+    @media (max-width: 700px) and (min-width: 577px) {
+        #assistantPanel { width: 340px; }
     }
+
+    /* ── Phones (portrait) & landscape phones (short viewport):
+         switch to a full-screen overlay, native-app style ── */
+    @media (max-width: 576px), (max-height: 420px) {
+        #assistantLauncher { width: 54px; height: 54px; }
+        #assistantLauncher svg { width: 23px; height: 23px; }
+
+        #assistantPanel {
+            position: fixed;
+            inset: 0;
+            top: env(safe-area-inset-top, 0px);
+            left: env(safe-area-inset-left, 0px);
+            right: env(safe-area-inset-right, 0px);
+            bottom: env(safe-area-inset-bottom, 0px);
+            width: auto;
+            max-width: none;
+            height: auto;
+            max-height: none;
+            border-radius: 0;
+        }
+
+        #assistantHeader { padding: 14px 16px; }
+        #assistantMessages { padding: 14px; }
+
+        /* 16px prevents iOS Safari from auto-zooming the page on focus */
+        #assistantInput { font-size: 16px; padding: 10px 16px; }
+        #assistantInputForm { padding: 10px; }
+    }
+
+    @media (max-width: 360px) {
+        #assistantLauncher { width: 48px; height: 48px; }
+        #assistantLauncher svg { width: 20px; height: 20px; }
+        #assistantHeaderTitle { font-size: 14px; }
+    }
+
+    /* Toggled on <body> only while the full-screen panel is open on a
+       small screen — locks background scroll so the page underneath
+       doesn't move behind the overlay. Added/removed entirely by JS
+       below in step with the widget's own open/close state, so it
+       never persists or leaks into the host page otherwise. */
+    body.assistant-scroll-lock { overflow: hidden; }
 </style>
 <script>
 (function () {
+    // ── Guard against double-initialization ──────────────────────────
+    // If this partial is included more than once on the same page (e.g.
+    // present in both the header and footer, or pulled in by two
+    // different layout sections), the widget's IDs are duplicated in
+    // markup but document.getElementById() only ever finds the first
+    // one — so every script instance ends up attaching its own
+    // listeners and its own polling interval to that SAME single set
+    // of visible elements. That's what causes messages to send/appear
+    // twice. This flag makes any run after the first a no-op.
+    if (window.__assistantWidgetInitialized) {
+        console.warn('Assistant widget already initialized — skipping duplicate init. This partial is likely included more than once in the layout.');
+        return;
+    }
+    window.__assistantWidgetInitialized = true;
+
     const COMPANY_NAME = @json($appSetting->app_name ?? config('app.name'));
     const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').content;
     const STORAGE_KEY = 'assistant_chat_uuid';
@@ -228,6 +293,24 @@
     let unreadCount = 0;
     let assignedAdminName = null;
     let adminTypingIndicatorShown = false;
+    let isSubmitting = false; // second line of defense against double-submit
+
+    // ── Small-screen full-screen mode + background scroll lock ───────
+    // Mirrors the CSS breakpoint above exactly, so JS and CSS always
+    // agree on when the panel is "full screen".
+    const mobileMediaQuery = window.matchMedia('(max-width: 576px), (max-height: 420px)');
+
+    function syncScrollLock() {
+        const shouldLock = widget.classList.contains('open') && mobileMediaQuery.matches;
+        document.body.classList.toggle('assistant-scroll-lock', shouldLock);
+    }
+
+    // Re-check on resize/orientation change while the panel is open,
+    // e.g. rotating a phone from portrait to landscape.
+    window.addEventListener('resize', syncScrollLock);
+    if (mobileMediaQuery.addEventListener) {
+        mobileMediaQuery.addEventListener('change', syncScrollLock);
+    }
 
     function scrollToBottom() {
         messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -250,9 +333,16 @@
         if (!online) headerStatus.querySelector('.assistant-dot').style.background = '#f59e0b';
     }
 
-    function addBotMessage(html) {
+    // msgId is optional — pass the server message id for anything that
+    // came from a poll/fetch response, so it can be de-duplicated if
+    // it's ever rendered twice (belt-and-braces alongside the init guard).
+    function addBotMessage(html, msgId = null) {
+        if (msgId !== null && messagesEl.querySelector(`[data-msg-id="${msgId}"]`)) {
+            return;
+        }
         const el = document.createElement('div');
         el.className = 'assistant-msg assistant-msg--bot';
+        if (msgId !== null) el.dataset.msgId = msgId;
         el.innerHTML = `<div class="assistant-msg__bubble">${html}</div>`;
         messagesEl.appendChild(el);
         scrollToBottom();
@@ -319,8 +409,12 @@
             input.focus();
             clearUnreadBadge();
         }
+        syncScrollLock();
     });
-    closeBtn.addEventListener('click', () => widget.classList.remove('open'));
+    closeBtn.addEventListener('click', () => {
+        widget.classList.remove('open');
+        syncScrollLock();
+    });
 
     // ── Welcome / main menu ──────────────────────────────────────────
     function startWelcome() {
@@ -599,7 +693,7 @@
                 addBotMessage("Welcome back! Continuing your conversation with our team below.");
                 payload.messages.forEach(m => {
                     if (m.sender === 'visitor') addUserMessage(m.message);
-                    else addBotMessage(escapeHtml(m.message));
+                    else addBotMessage(escapeHtml(m.message), m.id);
                     lastChatMessageId = Math.max(lastChatMessageId, m.id);
                 });
                 if (payload.assigned_admin_name) {
@@ -681,7 +775,7 @@
                     hideTyping();
                     adminTypingIndicatorShown = false;
                     payload.messages.forEach(m => {
-                        if (m.sender !== 'visitor') addBotMessage(escapeHtml(m.message));
+                        if (m.sender !== 'visitor') addBotMessage(escapeHtml(m.message), m.id);
                         lastChatMessageId = Math.max(lastChatMessageId, m.id);
                     });
                 }
@@ -694,9 +788,18 @@
         e.preventDefault();
         const text = input.value.trim();
         if (!text || input.disabled) return;
+
+        // Guard against a double-fire submit event (rapid Enter/click).
+        if (isSubmitting) return;
+        isSubmitting = true;
+
         input.value = '';
         activeSubmitHandler(text);
+
+        // Release the guard on the next tick — activeSubmitHandler calls
+        // are fire-and-forget (not awaited here), so this just needs to
+        // block a same-tick double dispatch, not the whole request.
+        setTimeout(() => { isSubmitting = false; }, 300);
     });
 })();
 </script>
-

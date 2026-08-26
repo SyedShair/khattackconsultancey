@@ -134,6 +134,79 @@
             70%  { transform: scale(1.8); opacity: 0; }
             100% { transform: scale(1.8); opacity: 0; }
         }
+        
+        #tb__contact .contact__info {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+    }
+
+    #tb__contact .contact__single__item {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        gap: 18px;
+        flex-wrap: nowrap;
+    }
+
+    #tb__contact .contact__icon {
+        flex: 0 0 60px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    #tb__contact .contact__icon svg {
+        width: 25px;
+        height: 25px;
+        flex-shrink: 0;
+    }
+
+    #tb__contact .contact__text {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    #tb__contact .contact__text h6 {
+        margin-bottom: 8px;
+    }
+
+    #tb__contact .contact__text p {
+        margin-bottom: 4px;
+        word-break: break-word;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 767px) {
+        #tb__contact .contact__info {
+            gap: 22px;
+        }
+
+        #tb__contact .contact__icon {
+            flex-basis: 50px;
+            width: 50px;
+            height: 50px;
+        }
+
+        #tb__contact .contact__icon svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        #tb__contact .contact__single__item {
+            flex-wrap: wrap;
+        }
+
+        #tb__contact .contact__icon {
+            margin-bottom: 6px;
+        }
+    }
     </style>
 
     <script>
