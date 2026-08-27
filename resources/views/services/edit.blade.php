@@ -9,22 +9,21 @@
 @endsection
 
 @section('content')
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">Edit Service</h3>
+    </div>
 
     <form action="{{ route('services.update', $service) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-
-        <div class="card">
-            <div class="card-header"><h5 class="card-title mb-0">Edit Service</h5></div>
-            <div class="card-body">
-                @include('services._form')
-            </div>
-            <div class="card-footer text-end">
-                <a href="{{ route('services.index') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </div>
+        <div class="card-body">
+            @include('services._form')
         </div>
-
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Update Service</button>
+            <a href="{{ route('services.index') }}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
     </form>
-
+</div>
 @endsection

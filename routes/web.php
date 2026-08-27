@@ -19,7 +19,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VacancyController;
-            use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfileController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Route;
 // ── Public website ────────────────────────────────────────────────────
 Route::get('/', fn () => view('front.home'))->name('home');
 
+Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
 Route::get('/vacancies', [PublicVacancyController::class, 'index'])->name('vacancies.public.index');
 Route::get('/vacancies/{vacancy:slug}', [PublicVacancyController::class, 'show'])->name('vacancies.public.show');
 Route::post('/vacancies/{vacancy:slug}/apply', [PublicVacancyController::class, 'apply'])->name('vacancies.public.apply');
@@ -62,6 +63,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
+
+    // Any authenticated user (not just admins) can manage their own profile
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Admin-only: user + role + permission + settings + recruitment management
     Route::middleware('role:admin')->group(function () {
@@ -166,16 +171,6 @@ Route::middleware('auth')->group(function () {
 
             Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
             Route::get('activity-logs/data', [ActivityLogController::class, 'data'])->name('activity-logs.data');
-            
-            
-
-
-    Route::get('/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
-
-    Route::patch('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
-
 
             Route::get('live-chat', [LiveChatController::class, 'index'])->name('live-chat.index');
             Route::get('live-chat/data', [LiveChatController::class, 'data'])->name('live-chat.data');

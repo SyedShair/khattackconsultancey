@@ -56,7 +56,7 @@
                                             <p>Sagittis purus amet volutpat consequat mauris nunc congue nisi and tortor.</p>
                                         </div>
                                         <div class="herobanner__button">
-                                            <a class="default__button" href="#tb__service">OUR ALL SERVICES</a>
+                                            <a class="default__button" href="{{ $service->link ?: route('services.show', $service) }}">OUR ALL SERVICES</a>
                                         </div>
                                     </div>
                                 </div>
@@ -253,7 +253,7 @@ We are dedicated to providing personalized services tailored to meet the unique 
                                     <div class="service__text"><p>{{ $service->description }}</p></div>
                                 @endif
                                 <div class="service__icon">
-                                    <a href="{{ $service->link_or_default }}"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <a href="{{  route('services.show', $service) }} "><svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M14.4258 10.9897L23.0101 10.9897L23.0101 19.574" stroke="#0A0624" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                                         <path d="M10.9902 23.0107L22.8908 11.1101" stroke="#0A0624" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg></a>
