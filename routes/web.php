@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Route;
 
 // ── Public website ────────────────────────────────────────────────────
 Route::get('/', fn () => view('front.home'))->name('home');
-
+Route::get('/services', [ServiceController::class, 'publicIndex'])->name('services.public.index');
 Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
 Route::get('/vacancies', [PublicVacancyController::class, 'index'])->name('vacancies.public.index');
 Route::get('/vacancies/{vacancy:slug}', [PublicVacancyController::class, 'show'])->name('vacancies.public.show');

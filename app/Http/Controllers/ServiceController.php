@@ -91,6 +91,12 @@ class ServiceController extends Controller
         return response()->json(['message' => 'Order updated.']);
     }
 
+    public function publicIndex()
+    {
+        $services = Service::active()->orderBy('sort_order')->get();
+ 
+        return view('front.services', compact('services'));
+    }
     /**
      * Public-facing service details page, e.g. /services/{slug}
      */
