@@ -384,7 +384,7 @@
                                     <img src="{{ $appSetting->logo_url ?? asset('website/img/logo/Logo_1.png') }}" alt="{{ $appSetting->app_name ?? config('app.name') }}">
                                 </div>
                                 <div class="footer__text">
-                                    <p>{{ $appSetting->address ?? '' }}</p>
+                                    <p>{!! $appSetting->address ?? 'not set yet' !!}</p>
                                 </div>
                                 <div class="footer__icon">
                                     <ul>
