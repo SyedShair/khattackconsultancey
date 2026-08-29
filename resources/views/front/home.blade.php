@@ -1,13 +1,7 @@
 @extends('layouts.front')
 
 @section('title', ($appSetting->app_name ?? config('app.name')) . ' | Home')
-<style>
-#tb__contact .contact__text {
-    
-    color: white;
-}
 
-</style>
 @section('content')
 
 @php
@@ -1109,10 +1103,10 @@ We are dedicated to providing personalized services tailored to meet the unique 
                                 </svg>
                             </span>
                         </div>
-                        <div class="contact__text">
+                        <div class="contact__text" style="color:white;">
                             <h6>Location:</h6>
                             @if($appSetting->address ?? false)
-                                <p style="color:white !important;">{!! $appSetting->address !!}</p>
+                                <p>{!! $appSetting->address !!}</p>
                             @else
                                 <p class="text-muted">Address not set yet.</p>
                             @endif
@@ -1286,3 +1280,4 @@ We are dedicated to providing personalized services tailored to meet the unique 
     })();
 </script>
 @endpush
+
