@@ -3,8 +3,7 @@
 @section('title', ($appSetting->app_name ?? config('app.name')) . ' | Home')
 <style>
 #tb__contact .contact__text {
-    flex: 1 1 auto;
-    min-width: 0;
+    
     color: white;
 }
 
