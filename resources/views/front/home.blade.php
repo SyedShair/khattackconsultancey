@@ -1106,7 +1106,7 @@ We are dedicated to providing personalized services tailored to meet the unique 
                         <div class="contact__text">
                             <h6>Location:</h6>
                             @if($appSetting->address ?? false)
-                                <p>{{ $appSetting->address }}</p>
+                                <p>{!! $appSetting->address !!}</p>
                             @else
                                 <p class="text-muted">Address not set yet.</p>
                             @endif
