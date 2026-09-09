@@ -207,6 +207,11 @@
             margin-bottom: 6px;
         }
     }
+    .herobanner__img img, .about__img__3 img, .about__img__wrapper img, .project__img img, .team__member__img img, .contact__img img, .service__img img{
+        max-width: 100%;
+        height: 80%;
+            
+    }
     </style>
 
     <script>

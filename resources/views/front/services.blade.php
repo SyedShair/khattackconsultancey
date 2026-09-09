@@ -97,15 +97,8 @@
 
 @push('styles')
 <style>
-    /* Uses the site's existing design tokens (see :root / .is_dark in
-       your global stylesheet) so this page automatically follows the
-       same light/dark palette as the rest of the site — no separate
-       dark-mode block needed for colours that already invert via
-       tokens (whiteColor, blackColor, headingColor, contentColor, etc).
-    ------------------------------------------------------------------ */
-
     .svc-page {
-        background-color: var(--pinkcolor);
+        background-color: #eef0ef;
         background-image: repeating-linear-gradient(
             135deg,
             rgba(0,0,0,0.015) 0px,
@@ -113,44 +106,22 @@
             transparent 2px,
             transparent 14px
         );
-        transition: background-color var(--transition);
-    }
-
-    html.is_dark .svc-page {
-        background-image: repeating-linear-gradient(
-            135deg,
-            rgba(255,255,255,0.03) 0px,
-            rgba(255,255,255,0.03) 2px,
-            transparent 2px,
-            transparent 14px
-        );
     }
 
     .svc-card {
         display: block;
-        background: var(--whiteColor);
+        background: #ffffff;
         border-radius: 20px;
         padding: 40px 32px 36px;
         height: 100%;
         text-decoration: none;
         box-shadow: 0 4px 24px rgba(10, 6, 36, 0.06);
-        transition: transform .3s cubic-bezier(.2,.8,.2,1),
-                    box-shadow var(--transition),
-                    background-color var(--transition);
-        will-change: transform;
+        transition: transform .25s ease, box-shadow .25s ease;
     }
 
     .svc-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 18px 38px rgba(10, 6, 36, 0.12);
-    }
-
-    html.is_dark .svc-card {
-        box-shadow: var(--darkShadow);
-    }
-
-    html.is_dark .svc-card:hover {
-        box-shadow: 0 0 28px 8px rgba(96, 117, 112, 0.28);
+        transform: translateY(-6px);
+        box-shadow: 0 14px 34px rgba(10, 6, 36, 0.12);
     }
 
     .svc-card__top {
@@ -164,83 +135,56 @@
         width: 96px;
         height: 96px;
         border-radius: 50%;
-        background: var(--gradientColor);
+        background: linear-gradient(90deg, #00229E 50%, #FE0094 50%);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        transition: transform .35s cubic-bezier(.2,.8,.2,1);
-    }
-
-    .svc-card:hover .svc-card__icon {
-        transform: rotate(-8deg) scale(1.06);
     }
 
     .svc-card__icon img {
         width: 46px;
         height: 46px;
         object-fit: contain;
-        transition: transform .35s ease;
-    }
-
-    .svc-card:hover .svc-card__icon img {
-        transform: rotate(8deg) scale(1.05);
     }
 
     .svc-card__icon i {
         font-size: 40px;
-        color: var(--whiteColor);
-        transition: transform .35s ease;
-    }
-
-    html.is_dark .svc-card__icon i {
-        color: var(--blackColor); /* blackColor flips to white in dark mode */
-    }
-
-    .svc-card:hover .svc-card__icon i {
-        transform: rotate(8deg) scale(1.05);
+        color: #ffffff;
     }
 
     .svc-card__arrow {
         width: 46px;
         height: 46px;
         border-radius: 50%;
-        background: var(--borderColor);
+        background: #eef0f2;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        transition: background var(--transition), transform .3s cubic-bezier(.2,.8,.2,1);
-    }
-
-    .svc-card__arrow svg path {
-        transition: stroke var(--transition);
-        stroke: var(--blackColor);
+        transition: background .2s ease;
     }
 
     .svc-card:hover .svc-card__arrow {
-        background: var(--blackColor);
-        transform: translate(4px, -4px) rotate(45deg);
+        background: #0A0624;
     }
 
     .svc-card:hover .svc-card__arrow svg path {
-        stroke: var(--whiteColor);
+        stroke: #ffffff;
     }
 
     .svc-card__title {
         font-weight: 700;
         text-transform: uppercase;
-        color: var(--headingColor);
+        color: #0A0624;
         margin-bottom: 16px;
         line-height: 1.3;
-        transition: color var(--transition);
     }
 
     .svc-card__text {
-        color: var(--contentColor);
+        color: #6b7280;
         margin-bottom: 0;
         line-height: 1.7;
-        transition: color var(--transition);
     }
 
     @media (max-width: 575.98px) {
@@ -253,23 +197,47 @@
         }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-        .svc-card,
-        .svc-card__icon,
-        .svc-card__icon img,
-        .svc-card__icon i,
-        .svc-card__arrow,
-        .svc-card__arrow svg path,
-        .svc-card__title,
-        .svc-card__text {
-            transition: none !important;
+    /* Large screens: the theme's own container only widens to 1355px
+       above 1500px (see the site's global stylesheet) — without a
+       matching rule here, these cards stay a fixed small size while
+       everything else on the page visually scales up, making the
+       services section look undersized on big monitors. */
+    @media (min-width: 1200px) {
+        .svc-card__title {
+            font-size: 22px;
         }
-        .svc-card:hover { transform: none; }
-        .svc-card:hover .svc-card__icon,
-        .svc-card:hover .svc-card__icon img,
-        .svc-card:hover .svc-card__icon i,
-        .svc-card:hover .svc-card__arrow {
-            transform: none;
+        .svc-card__text {
+            font-size: 17px;
+        }
+    }
+
+    @media (min-width: 1500px) and (max-width: 1920px) {
+        .svc-page .container {
+            max-width: 1355px;
+        }
+        .svc-card {
+            padding: 48px 40px 44px;
+        }
+        .svc-card__icon {
+            width: 110px;
+            height: 110px;
+        }
+        .svc-card__icon i {
+            font-size: 46px;
+        }
+        .svc-card__icon img {
+            width: 52px;
+            height: 52px;
+        }
+        .svc-card__arrow {
+            width: 52px;
+            height: 52px;
+        }
+        .svc-card__title {
+            font-size: 24px;
+        }
+        .svc-card__text {
+            font-size: 18px;
         }
     }
 </style>
