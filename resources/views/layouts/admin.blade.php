@@ -1,24 +1,19 @@
 <!DOCTYPE html>
-       <html lang="en" data-bs-theme="{{ $appSetting->theme ?? 'light' }}">
+<html lang="en" data-bs-theme="{{ $appSetting->theme ?? 'light' }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-           <title>@yield('title') | {{ $appSetting->app_name ?? config('app.name') }}</title>
-
+    <title>@yield('title', 'Admin') | {{ $appSetting->app_name ?? config('app.name') }}</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/css/adminlte.min.css">
 <style>
-/* Custom theme override — replaces Bootstrap/AdminLTE primary blue with #4F6B63
-   Include this AFTER the bootstrap.min.css and adminlte.min.css links in your layout:
-   <link rel="stylesheet" href="{{ asset('css/custom-theme.css') }}">
-*/
-
+/* Custom theme override — replaces Bootstrap/AdminLTE primary blue with #4F6B63 */
 :root,
 [data-bs-theme="light"],
 [data-bs-theme="dark"] {
@@ -72,13 +67,8 @@
     color: #fff !important;
 }
 
-.text-primary {
-    color: #4F6B63 !important;
-}
-
-.border-primary {
-    border-color: #4F6B63 !important;
-}
+.text-primary { color: #4F6B63 !important; }
+.border-primary { border-color: #4F6B63 !important; }
 
 /* Sidebar active nav item */
 .app-sidebar .nav-link.active {
@@ -94,23 +84,14 @@
 }
 
 /* Links */
-a {
-    color: #4F6B63;
-}
-a:hover {
-    color: #3d534d;
-}
+a { color: #4F6B63; }
+a:hover { color: #3d534d; }
 
 /* Badges */
-.badge.text-bg-primary {
-    background-color: #4F6B63 !important;
-}
+.badge.text-bg-primary { background-color: #4F6B63 !important; }
 
 /* Spinners */
-.spinner-border.text-primary {
-    color: #4F6B63 !important;
-}
-
+.spinner-border.text-primary { color: #4F6B63 !important; }
 </style>
     @stack('styles')
 </head>
@@ -136,7 +117,7 @@ a:hover {
 
             <ul class="navbar-nav ms-auto align-items-center">
 
-                {{-- ============== Activity Log widget (bell dropdown) ============== --}}
+                {{-- Activity Log widget (bell dropdown) --}}
                 @auth
                     <li class="nav-item dropdown" id="activityWidget">
                         <a href="#" class="nav-link position-relative" data-bs-toggle="dropdown"
@@ -163,89 +144,68 @@ a:hover {
                 @endauth
 
                 @auth
-                   <li class="nav-item dropdown user-menu">
-    <a href="#"
-       class="nav-link dropdown-toggle d-flex align-items-center"
-       data-bs-toggle="dropdown"
-       aria-expanded="false">
+                    @php
+                        $avatarUrl = auth()->user()->avatar
+                            ? asset('storage/' . auth()->user()->avatar)
+                            : asset('assets/img/user2-160x160.jpg');
+                    @endphp
+                    <li class="nav-item dropdown user-menu">
+                        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ $avatarUrl }}" class="user-image rounded-circle shadow"
+                                 alt="{{ auth()->user()->name }}">
+                            <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
+                        </a>
 
-        <img src="{{ auth()->user()->avatar
-    ? asset('storage/' . auth()->user()->avatar)
-    : asset('assets/img/user2-160x160.jpg') }}"
-    class="user-image rounded-circle shadow"
-    alt="{{ auth()->user()->name }}">
-        <span class="d-none d-md-inline">
-            {{ auth()->user()->name }}
-        </span>
-    </a>
+                        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
 
-    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                            {{-- User header --}}
+                            <li class="user-header text-center p-3"
+                                style="background: linear-gradient(120deg, #3E5B54, #4F6B63, #607570);">
+                                <img src="{{ $avatarUrl }}" class="rounded-circle shadow"
+                                     alt="{{ auth()->user()->name }}">
 
-        {{-- User Image --}}
-        <li class="user-header text-bg- text-center p-3" style="background: linear-gradient(120deg, #3E5B54, #4F6B63, #607570);">
-          <img src="{{ auth()->user()->avatar
-    ? asset('storage/' . auth()->user()->avatar)
-    : asset('assets/img/user2-160x160.jpg') }}"
-    class="user-image rounded-circle shadow"
-    alt="{{ auth()->user()->name }}">
+                                <p class="mb-0 mt-2 text-white">
+                                    {{ auth()->user()->name }}
+                                    @if(auth()->user()->role ?? false)
+                                        - {{ auth()->user()->role }}
+                                    @endif
+                                    <small class="d-block">
+                                        Member since {{ auth()->user()->created_at->format('M. Y') }}
+                                    </small>
+                                </p>
+                            </li>
 
-            <p class="mb-0 mt-2">
-                {{ auth()->user()->name }}
+                            {{-- Footer --}}
+                            <li class="user-footer p-2">
+                                <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary">Profile</a>
 
-                @if(auth()->user()->role ?? false)
-                    - {{ auth()->user()->role }}
-                @endif
-
-                <small class="d-block">
-                    Member since {{ auth()->user()->created_at->format('M. Y') }}
-                </small>
-            </p>
-        </li>
-
-        {{-- Menu Body --}}
-        
-
-        {{-- Menu Footer --}}
-        <li class="user-footer p-2">
-            <a href="{{ route('profile.edit') }}"
-               class="btn btn-outline-secondary">
-                Profile
-            </a>
-
-            <form method="POST"
-                  action="{{ route('logout') }}"
-                  class="d-inline float-end">
-                @csrf
-
-                <button type="submit"
-                        class="btn btn-outline-danger">
-                    Sign out
-                </button>
-            </form>
-        </li>
-
-    </ul>
-</li>
+                                <form method="POST" action="{{ route('logout') }}" class="d-inline float-end">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-danger">Sign out</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
                 @endauth
 
             </ul>
-
         </div>
     </nav>
 
     <!-- SIDEBAR -->
-    <aside class="app-sidebar bg-body-secondary shadow" {{ ($appSetting->theme ?? 'light') === 'dark' ? 'dark-mode' : '' }}>
+    <aside class="app-sidebar bg-body-secondary shadow">
 
         <div class="sidebar-brand">
-              <a href="{{ url('/dashboard') }}" class="brand-link">
-
-
-           <img src="{{ asset('storage/' . $appSetting->logo ?? asset('adminlte/img/AdminLTELogo.png') ) }}"
-                class="brand-image opacity-75 shadow" alt="Logo">
-       </a>
+            <a href="{{ url('/dashboard') }}" class="brand-link">
+                <img src="{{ !empty($appSetting?->logo)
+                            ? asset('storage/' . $appSetting->logo)
+                            : asset('adminlte/img/AdminLTELogo.png') }}"
+                     class="brand-image opacity-75 shadow" alt="Logo">
+            </a>
         </div>
 
-      <div class="sidebar-wrapper">
+        <div class="sidebar-wrapper">
             <nav class="mt-2">
                 <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
 
@@ -259,7 +219,7 @@ a:hover {
 
                     <li class="nav-header">USER MANAGEMENT</li>
 
-                    <li class="nav-item has-treeview {{ request()->is('users*', 'roles*', 'permissions*') ? 'menu-open' : '' }}">
+                    <li class="nav-item {{ request()->is('users*', 'roles*', 'permissions*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('users*', 'roles*', 'permissions*') ? 'active' : '' }}">
                             <i class="nav-icon bi bi-people"></i>
                             <p>
@@ -268,7 +228,6 @@ a:hover {
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-
                             <li class="nav-item">
                                 <a href="{{ url('/users') }}"
                                    class="nav-link {{ request()->is('users*') ? 'active' : '' }}">
@@ -276,7 +235,6 @@ a:hover {
                                     <p>Users</p>
                                 </a>
                             </li>
-
                             <li class="nav-item">
                                 <a href="{{ url('/roles') }}"
                                    class="nav-link {{ request()->is('roles*') ? 'active' : '' }}">
@@ -284,7 +242,6 @@ a:hover {
                                     <p>Roles</p>
                                 </a>
                             </li>
-
                             <li class="nav-item">
                                 <a href="{{ url('/permissions') }}"
                                    class="nav-link {{ request()->is('permissions*') ? 'active' : '' }}">
@@ -292,14 +249,12 @@ a:hover {
                                     <p>Permissions</p>
                                 </a>
                             </li>
-
-
                         </ul>
                     </li>
 
                     <li class="nav-header">RECRUITMENT</li>
 
-                    <li class="nav-item has-treeview {{ request()->is('admin/vacancies*', 'admin/applications*') ? 'menu-open' : '' }}">
+                    <li class="nav-item {{ request()->is('admin/vacancies*', 'admin/applications*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('admin/vacancies*', 'admin/applications*') ? 'active' : '' }}">
                             <i class="nav-icon bi bi-briefcase"></i>
                             <p>
@@ -308,7 +263,6 @@ a:hover {
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-
                             <li class="nav-item">
                                 <a href="{{ url('/admin/vacancies') }}"
                                    class="nav-link {{ request()->is('admin/vacancies*') ? 'active' : '' }}">
@@ -316,7 +270,6 @@ a:hover {
                                     <p>Vacancies</p>
                                 </a>
                             </li>
-
                             <li class="nav-item">
                                 <a href="{{ url('/admin/applications') }}"
                                    class="nav-link {{ request()->is('admin/applications*') ? 'active' : '' }}">
@@ -324,110 +277,22 @@ a:hover {
                                     <p>Applications</p>
                                 </a>
                             </li>
-
                         </ul>
                     </li>
 
-                    <li class="nav-header">WEBSITE CONTENT</li>
+                    <li class="nav-header">WEBSITE</li>
 
-                    <li class="nav-item has-treeview {{ request()->is('admin/hero-slides*', 'admin/services*', 'admin/team-members*', 'admin/contact-messages*', 'admin/projects*', 'admin/pricing-plans*') ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->is('admin/hero-slides*', 'admin/services*', 'admin/team-members*', 'admin/contact-messages*', 'admin/projects*', 'admin/pricing-plans*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-layout-text-window-reverse"></i>
-                            <p>
-                                Website Content
-                                <i class="nav-arrow bi bi-chevron-right"></i>
-                            </p>
+                    <li class="nav-item">
+                        <a href="{{ url('/admin/contact-messages') }}"
+                           class="nav-link {{ request()->is('admin/contact-messages*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-envelope-open"></i>
+                            <p>Contact Messages</p>
                         </a>
-                        <ul class="nav nav-treeview">
-
-                            <li class="nav-item">
-                                <a href="{{ url('/admin/hero-slides') }}"
-                                   class="nav-link {{ request()->is('admin/hero-slides*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-images"></i>
-                                    <p>Hero Slides</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ url('/admin/services') }}"
-                                   class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-grid-3x3-gap"></i>
-                                    <p>Services</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ url('/admin/team-members') }}"
-                                   class="nav-link {{ request()->is('admin/team-members*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-people-fill"></i>
-                                    <p>Team Members</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ url('/admin/contact-messages') }}"
-                                   class="nav-link {{ request()->is('admin/contact-messages*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-envelope-open"></i>
-                                    <p>Contact Messages</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ url('/admin/projects') }}"
-                                   class="nav-link {{ request()->is('admin/projects*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-kanban"></i>
-                                    <p>Projects</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ url('/admin/pricing-plans') }}"
-                                   class="nav-link {{ request()->is('admin/pricing-plans*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-tags"></i>
-                                    <p>Pricing Plans</p>
-                                </a>
-                            </li>
-
-                        </ul>
-                    </li>
-
-                    <li class="nav-header">ASSISTANT</li>
-
-                    <li class="nav-item has-treeview {{ request()->is('admin/consultation-bookings*', 'admin/live-chat*') ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->is('admin/consultation-bookings*', 'admin/live-chat*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-robot"></i>
-                            <p>
-                                Assistant
-                                <i class="nav-arrow bi bi-chevron-right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-
-                            <li class="nav-item">
-                                <a href="{{ url('/admin/consultation-bookings') }}"
-                                   class="nav-link {{ request()->is('admin/consultation-bookings*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-calendar-check"></i>
-                                    <p>Consultation Bookings</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ url('/admin/live-chat') }}"
-                                   class="nav-link {{ request()->is('admin/live-chat*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-chat-dots"></i>
-                                    <p>
-                                        Live Chat
-                                        <span class="badge text-bg-danger ms-auto d-none" id="liveChatBadge">0</span>
-                                    </p>
-                                </a>
-                            </li>
-
-                        </ul>
                     </li>
 
                     <li class="nav-header">AUDIT</li>
 
-                    <li class="nav-item has-treeview {{ request()->is('admin/activity-logs*') ? 'menu-open' : '' }}">
+                    <li class="nav-item {{ request()->is('admin/activity-logs*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('admin/activity-logs*') ? 'active' : '' }}">
                             <i class="nav-icon bi bi-shield-check"></i>
                             <p>
@@ -436,7 +301,6 @@ a:hover {
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-
                             <li class="nav-item">
                                 <a href="{{ url('/admin/activity-logs') }}"
                                    class="nav-link {{ request()->is('admin/activity-logs*') ? 'active' : '' }}">
@@ -444,7 +308,6 @@ a:hover {
                                     <p>Activity Log</p>
                                 </a>
                             </li>
-
                         </ul>
                     </li>
 
@@ -455,6 +318,7 @@ a:hover {
                             <p>Settings</p>
                         </a>
                     </li>
+
                 </ul>
             </nav>
         </div>
@@ -513,7 +377,6 @@ a:hover {
 
 </div>
 
-
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta3/dist/js/adminlte.min.js"></script>
@@ -521,13 +384,12 @@ a:hover {
 @auth
 <script>
 (function () {
-    const activityList = document.getElementById('activityList');
+    const activityList  = document.getElementById('activityList');
     const activityBadge = document.getElementById('activityBellBadge');
-    const bellToggle = document.getElementById('activityBellToggle');
+    const bellToggle    = document.getElementById('activityBellToggle');
     if (!activityList || !bellToggle) return;
 
     const dataUrl = "{{ url('/admin/activity-logs/data') }}";
-    let loaded = false;
 
     const actionIcon = {
         login:   'bi-box-arrow-in-right text-success',
@@ -537,9 +399,14 @@ a:hover {
         deleted: 'bi-trash text-danger',
     };
 
+    // Escape text before inserting it as HTML
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+
     function renderActivity(items) {
-        if (items.length === 0) {
-            activityList.innerHTML = `<div class="text-center text-muted small py-4">No recent activity.</div>`;
+        if (!items.length) {
+            activityList.innerHTML = '<div class="text-center text-muted small py-4">No recent activity.</div>';
             return;
         }
 
@@ -547,45 +414,43 @@ a:hover {
             <div class="px-3 py-2 border-bottom d-flex gap-2 align-items-start">
                 <i class="bi ${actionIcon[log.action] ?? 'bi-dot'} mt-1"></i>
                 <div class="flex-grow-1" style="min-width:0;">
-                    <div class="small text-truncate">${log.description}</div>
-                    <div class="text-muted" style="font-size:11px;">${log.user_name} · ${log.created_human}</div>
+                    <div class="small text-truncate">${esc(log.description)}</div>
+                    <div class="text-muted" style="font-size:11px;">${esc(log.user_name)} · ${esc(log.created_human)}</div>
                 </div>
             </div>
         `).join('');
     }
 
     function loadActivity() {
-        fetch(`${dataUrl}?per_page=8`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-            .then(res => res.json())
+        fetch(`${dataUrl}?per_page=8`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('Request failed');
+                return res.json();
+            })
             .then(payload => {
-                renderActivity(payload.data);
+                const items = payload.data || [];
+                renderActivity(items);
 
-                // Badge shows how many activity entries happened today.
-                const todayCount = payload.data.filter(log => log.created_human.includes('second') || log.created_human.includes('minute') || log.created_human.includes('hour')).length;
-                if (todayCount > 0) {
-                    activityBadge.textContent = todayCount > 9 ? '9+' : String(todayCount);
+                // Badge: entries from the last few hours
+                const recent = items.filter(log => /second|minute|hour/.test(log.created_human || '')).length;
+                if (recent > 0) {
+                    activityBadge.textContent = recent > 9 ? '9+' : String(recent);
                     activityBadge.classList.remove('d-none');
                 } else {
                     activityBadge.classList.add('d-none');
                 }
             })
             .catch(() => {
-                activityList.innerHTML = `<div class="text-center text-muted small py-4">Could not load activity.</div>`;
+                activityList.innerHTML = '<div class="text-center text-muted small py-4">Could not load activity.</div>';
             });
     }
 
-    // Load once on page load (for the badge), and refresh the list every
-    // time the dropdown is opened so it's always current without polling
-    // constantly in the background.
+    // Load on page load, refresh whenever the dropdown opens, and keep the badge fresh
     loadActivity();
-    bellToggle.addEventListener('click', () => {
-        if (!loaded) {
-            loaded = true;
-        }
-        loadActivity();
-    });
-
-    setInterval(loadActivity, 60000); // keep the badge fresh in the background
+    bellToggle.addEventListener('click', loadActivity);
+    setInterval(loadActivity, 60000);
 })();
 </script>
 @endauth

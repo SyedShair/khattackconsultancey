@@ -1,0 +1,120 @@
+<?php
+
+// Each course: [name, level]  (level: beginner | intermediate | advanced)
+return [
+
+    'title' => 'Vocational Training',
+
+    'categories' => [
+
+        'health-medical-care' => [
+            'title'   => 'Health & Medical Care',
+            'courses' => [
+                ['ADHD Awareness', 'beginner'],
+                ['Administration of Medicine in Schools', 'intermediate'],
+                ['Artificial Ventilation', 'advanced'],
+                ['Basic Observations', 'advanced'],
+                ['Blood Transfusions', 'advanced'],
+                ['Cannulation', 'advanced'],
+                ['Care Certificate', 'beginner'],
+                ['Care Planning', 'intermediate'],
+                ['Catheterisation Awareness', 'intermediate'],
+                ['Dementia Care', 'intermediate'],
+                ['Diabetes Awareness', 'intermediate'],
+                ['Diet and Nutrition', 'intermediate'],
+                ['Dysphagia Care', 'beginner'],
+                ['Emergency First Aid Awareness', 'intermediate'],
+                ['Epilepsy Awareness', 'intermediate'],
+                ['Epilepsy Level 3', 'advanced'],
+                ['IV Drug Therapy', 'beginner'],
+                ['Moving and Handling of People Awareness', 'intermediate'],
+                ['Moving and Handling of People Level 2', 'advanced'],
+                ['Oxygen Therapy', 'advanced'],
+                ['Paediatric First Aid', 'intermediate'],
+                ['Palliative and End of Life Care', 'intermediate'],
+                ['PEG Feeding', 'advanced'],
+                ['Pressure Care and Moisture Lesion Awareness', 'advanced'],
+                ['Suction Training', 'advanced'],
+                ['Suppository Administration', 'advanced'],
+                ['Tracheostomy Awareness', 'advanced'],
+                ['Understanding Anaphylaxis', 'beginner'],
+                ['Understanding Asthma', 'beginner'],
+                ['Venepuncture Awareness', 'beginner'],
+                ['Verification of Death', 'beginner'],
+            ],
+        ],
+
+        'safeguarding-child-protection' => [
+            'title'   => 'Safeguarding & Child Protection',
+            'courses' => [
+                ['Adverse Childhood Experiences', 'beginner'],
+                ['Child Exploitation', 'beginner'],
+                ['Child Neglect', 'beginner'],
+                ['Child Protection in Education', 'beginner'],
+                ['Child Sexual Exploitation Awareness', 'intermediate'],
+                ['Safeguarding of Adults Level 1 CSTF Aligned', 'beginner'],
+                ['Safeguarding of Adults Level 2 CSTF Aligned', 'advanced'],
+                ['Safeguarding of Adults Level 3 CSTF Aligned', 'advanced'],
+                ['Safeguarding of Children Advanced', 'intermediate'],
+                ['Safeguarding of Children Awareness', 'intermediate'],
+                ['Safeguarding of Children in Care Level 1', 'beginner'],
+                ['Safeguarding of Children in Care Level 2', 'advanced'],
+                ['Safeguarding of Children in Care Level 3', 'advanced'],
+                ['Safeguarding of Children in Education Level 1', 'beginner'],
+                ['Safeguarding of Children in Education Level 2', 'advanced'],
+                ['Safeguarding of Children in Education Level 3', 'advanced'],
+                ['Safeguarding of Vulnerable Adults Awareness', 'intermediate'],
+            ],
+        ],
+
+        'mental-health-wellbeing' => [
+            'title'   => 'Mental Health & Wellbeing',
+            'courses' => [
+                ['Autistic Spectrum Disorder (ASD) Awareness', 'intermediate'],
+                ['Autistic Spectrum Disorder Level 3', 'intermediate'],
+                ['Borderline Personality Disorder', 'beginner'],
+                ['Brain Injury ABI and TBI', 'beginner'],
+                ['Mental Capacity Act and Deprivation of Liberties Awareness', 'intermediate'],
+                ['Mental Health Awareness', 'intermediate'],
+                ['Mental Wellbeing in Children and Young Adults', 'beginner'],
+                ['Stress Awareness', 'intermediate'],
+                ['Self-Harm Awareness', 'intermediate'],
+                ['Understanding Anxiety', 'beginner'],
+            ],
+        ],
+
+        'health-safety' => [
+            'title'   => 'Health & Safety',
+            'courses' => [
+                ['Asbestos Awareness', 'intermediate'],
+                ['Bed Rails and Risk Management Awareness', 'beginner'],
+                ['Concussion Awareness', 'intermediate'],
+                ['Concussion in Schools', 'beginner'],
+                ['Fire Safety CSTF Aligned', 'intermediate'],
+                ['Fire Safety in Education', 'beginner'],
+                ['Health and Safety Awareness', 'intermediate'],
+                ['RIDDOR Awareness', 'intermediate'],
+                ['Slips Trips and Falls Awareness', 'intermediate'],
+                ['Working at Height Awareness', 'intermediate'],
+            ],
+        ],
+
+        'legal-compliance-governance' => [
+            'title'   => 'Legal, Compliance & Governance',
+            'courses' => [
+                ['Bribery Act Awareness', 'intermediate'],
+                ['Countering Fraud, Bribery & Corruption', 'beginner'],
+                ['Consumer Rights Act Awareness', 'intermediate'],
+                ['Criminal Finance Act Awareness', 'beginner'],
+                ['GDPR Awareness', 'intermediate'],
+                ['Information Governance and Data Security', 'beginner'],
+                ['Money Laundering Awareness', 'intermediate'],
+                ['Duty of Candour', 'intermediate'],
+                ['Duty of Care', 'intermediate'],
+                ['Professional Boundaries', 'beginner'],
+                ['Preventing Radicalisation', 'intermediate'],
+                ['Safer Recruitment in Education', 'beginner'],
+            ],
+        ],
+    ],
+];

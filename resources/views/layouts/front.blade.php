@@ -25,193 +25,362 @@
         /* Inner pages (no hero image behind the header) need a solid,
            high-contrast header — the theme's default transparent header
            only reads correctly over the dark hero banner on the homepage. */
-        .headerarea__solid {
-            background: #ffffff;
-            box-shadow: 0 2px 16px rgba(10, 6, 36, 0.08);
-        }
-
-        /* Nav text is white ONLY while the header is in its transparent
-           state (sitting over the dark hero/banner). Solid and scrolled
-           states override this to dark further down — this fixes the
-           "menu disappears" bug that comes from forcing white globally. */
-        .headerarea__transparent .headerarea__main__menu nav ul li a,
-        .headerarea__transparent .mobile__log--title {
-            color: #ffffff !important;
-        }
-        .headerarea__solid .headerarea__main__menu nav ul li a,
-        .headerarea__solid .mobile__log--title {
-            color: #0A0624 !important;
-        }
-        .headerarea__solid .headerarea__logo img {
-            max-height: 42px;
-            width: auto;
-        }
-        .inner__page__spacing {
-            padding-top: 140px;
-        }
-        @media (max-width: 767px) {
-            .inner__page__spacing { padding-top: 100px; }
-        }
-        .footer__menu ul li a {
-            color: #fff !important;
-        }
-
-        /* Header stays transparent throughout — including while scrolled —
-           per request. Text color still follows headerarea__transparent
-           vs headerarea__solid per route, defined above. */
-
-        html.is_dark {
-            --content-text-color: #ffffff;
-        }
-        /* About / Mission section with a pinned white card background
-           (.about__white__bg forces white regardless of theme by default) */
-        .about.about__white__bg {
-            background-color: #ffffff;
-        }
-        html.is_dark .about.about__white__bg {
-            background-color: #14101f; /* swap for your actual dark "card" surface colour */
-        }
-
-        .about.about__white__bg .section__title__button span,
-        .about.about__white__bg .section__title__heading h3,
-        .about.about__white__bg .about__number__inner span,
-        .about.about__white__bg .about__number__inner p,
-        .about.about__white__bg .about__misson h6,
-        .about.about__white__bg .about__text__2 p {
-            color: var(--content-text-color) !important;
-        }
-        body,
-        p,
-        li,
-        h1, h2, h3, h4, h5, h6,
-        span:not(.text__gradient),
-        a:not(.default__button):not(.text__gradient) {
-            color: var(--content-text-color);
-        }
-        /* Replace the blue→purple→pink gradient overlay with brand colour */
-        .about__white__bg.about__grident__bg::after {
-            background: var(--accent, #607570) !important;
-            opacity: 0.15; /* lower opacity so content behind stays readable */
-        }
-
-        /* Dark mode: slightly more visible */
-        html.is_dark .about__white__bg.about__grident__bg::after {
-            opacity: 0.25;
-        }
-        .project__margin {
-            background: var(--whiteColor);
-            margin-top: 7px !important;
-            border-radius: var(--borderRadius);
-            position: relative;
-            margin-left: 185px;
-            margin-right: 185px;
-        }
-
-        /* ============== WhatsApp icon in the navbar (blinking) ============== */
-        .headerarea__whatsapp {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            transition: background-color .15s ease, transform .15s ease;
-        }
-        .headerarea__whatsapp:hover {
-            background-color: rgba(37, 211, 102, 0.12);
-            transform: scale(1.06);
-        }
-        .headerarea__whatsapp__pulse {
-            position: absolute;
-            inset: 4px;
-            border-radius: 50%;
-            background: #25D366;
-            animation: whatsappBlink 1.8s ease-out infinite;
-        }
-        @keyframes whatsappBlink {
-            0%   { transform: scale(1);   opacity: 0.6; }
-            70%  { transform: scale(1.8); opacity: 0; }
-            100% { transform: scale(1.8); opacity: 0; }
-        }
-        
-        #tb__contact .contact__info {
-        display: flex;
-        flex-direction: column;
-        gap: 28px;
-    }
-
-    #tb__contact .contact__single__item {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: flex-start !important;
-        gap: 18px;
-        flex-wrap: nowrap;
-    }
-
+      
+  ---------- Extra variables used below ---------- */
+:root {
+    --content-text-color: var(--contentColor);
+    --text-on-dark: #FFFFFF;
+    --text-on-dark-muted: #D6DBE3;
+    --input-dark: #263244;
+    --accent: var(--primaryColor);
+}
+html.is_dark {
+    --content-text-color: #E8ECF2;
+    --input-dark: #1A2336;
+}
+ 
+/* ---------- Header: white with dark text (solid and transparent) ---------- */
+.headerarea__transparent,
+.headerarea__solid {
+    background: var(--whiteColor);
+    box-shadow: 0 2px 16px rgba(31, 42, 68, 0.08);
+}
+html.is_dark .headerarea__transparent,
+html.is_dark .headerarea__solid {
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
+}
+.headerarea__transparent .headerarea__main__menu nav ul li a,
+.headerarea__transparent .mobile__log--title,
+.headerarea__solid .headerarea__main__menu nav ul li a,
+.headerarea__solid .mobile__log--title {
+    color: var(--blackColor) !important;
+}
+.headerarea__main__menu nav ul li a:hover,
+.headerarea__main__menu nav ul li.active > a {
+    border-bottom: 2px solid var(--blackColor);
+}
+html.is_dark .headerarea__main__menu nav ul li a:hover,
+html.is_dark .headerarea__main__menu nav ul li.active > a {
+    border-bottom-color: var(--primaryColor);
+}
+.headerarea__solid .headerarea__logo img {
+    max-height: 42px;
+    width: auto;
+}
+/* Dark mode logo: turns it fully white (removes the teal "ll").
+   Delete this rule if you have a light logo version instead. */
+html.is_dark .headerarea__logo img {
+    filter: brightness(0) invert(1);
+}
+ 
+.inner__page__spacing { padding-top: 140px; }
+@media (max-width: 767px) {
+    .inner__page__spacing { padding-top: 100px; }
+}
+ 
+/* ---------- Global text colours ---------- */
+body, p, li,
+span:not(.text__gradient),
+a:not(.default__button):not(.text__gradient) {
+    color: var(--content-text-color);
+}
+h1, h2, h3, h4, h5, h6 {
+    color: var(--headingColor);
+}
+body { background-color: var(--bodyBg); }
+ 
+/* ---------- Serif section titles ---------- */
+.section__title__heading h1,
+.section__title__heading h2,
+.section__title__heading h3,
+#tb__contact h2,
+.about__misson h6 {
+    font-family: Georgia, "Times New Roman", Times, serif !important;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+#tb__contact .section__title__heading h2,
+#tb__contact .section__title h2 { text-transform: uppercase; }
+#tb__contact h4,
+#tb__contact h5 { font-family: inherit !important; }
+ 
+/* ---------- About / Mission card ---------- */
+.about.about__white__bg { background-color: var(--whiteColor); }
+ 
+.about.about__white__bg .section__title__button span,
+.about.about__white__bg .section__title__heading h3,
+.about.about__white__bg .about__number__inner span,
+.about.about__white__bg .about__number__inner p,
+.about.about__white__bg .about__misson h6,
+.about.about__white__bg .about__text__2 p {
+    color: var(--content-text-color) !important;
+}
+ 
+/* Gradient overlay replaced with the teal accent */
+.about__white__bg.about__grident__bg::after {
+    background: var(--primaryColor) !important;
+    opacity: 0.12;
+}
+html.is_dark .about__white__bg.about__grident__bg::after { opacity: 0.22; }
+ 
+.project__margin {
+    background: var(--whiteColor);
+    margin-top: 7px !important;
+    border-radius: var(--borderRadius);
+    position: relative;
+    margin-left: 185px;
+    margin-right: 185px;
+}
+ 
+/* ---------- Dark sections: Contact Us + footer ---------- */
+#tb__contact,
+.contact,
+footer,
+.footerarea {
+    background-color: var(--secondaryColor) !important;
+}
+html.is_dark #tb__contact,
+html.is_dark .contact,
+html.is_dark footer,
+html.is_dark .footerarea {
+    background-color: #0F1624 !important;
+}
+ 
+#tb__contact h1, #tb__contact h2, #tb__contact h3,
+#tb__contact h4, #tb__contact h5, #tb__contact h6,
+footer h1, footer h2, footer h3, footer h4, footer h5, footer h6 {
+    color: var(--text-on-dark) !important;
+}
+#tb__contact p, #tb__contact li, #tb__contact a,
+#tb__contact span:not(.text__gradient),
+footer p, footer li, footer span:not(.text__gradient) {
+    color: var(--text-on-dark-muted) !important;
+}
+.footer__menu ul li a { color: var(--text-on-dark) !important; }
+ 
+/* Form fields */
+#tb__contact input,
+#tb__contact textarea,
+#tb__contact select {
+    background: var(--input-dark);
+    border: 0;
+    color: var(--text-on-dark);
+}
+#tb__contact input::placeholder,
+#tb__contact textarea::placeholder {
+    color: var(--text-on-dark-muted);
+    opacity: 1;
+}
+#tb__contact input:focus,
+#tb__contact textarea:focus {
+    outline: 2px solid var(--primaryColor);
+}
+ 
+/* ---------- Buttons & accents ---------- */
+.default__button {
+    background: var(--primaryColor);
+    border-color: var(--primaryColor);
+    color: #fff;
+}
+.default__button:hover {
+    background: var(--blackColor);
+    border-color: var(--blackColor);
+}
+html.is_dark .default__button:hover {
+    background: var(--secondaryColor);
+    border-color: var(--secondaryColor);
+}
+.text__gradient {
+    background: none !important;
+    -webkit-text-fill-color: var(--primaryColor);
+    color: var(--primaryColor);
+}
+ 
+/* ---------- WhatsApp icon in the navbar (blinking) ---------- */
+.headerarea__whatsapp {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    transition: background-color .15s ease, transform .15s ease;
+}
+.headerarea__whatsapp:hover {
+    background-color: rgba(37, 211, 102, 0.12);
+    transform: scale(1.06);
+}
+.headerarea__whatsapp__pulse {
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: #25D366;
+    animation: whatsappBlink 1.8s ease-out infinite;
+}
+@keyframes whatsappBlink {
+    0%   { transform: scale(1);   opacity: 0.6; }
+    70%  { transform: scale(1.8); opacity: 0; }
+    100% { transform: scale(1.8); opacity: 0; }
+}
+ 
+/* ---------- Contact info layout ---------- */
+#tb__contact .contact__info {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+#tb__contact .contact__single__item {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 18px;
+    flex-wrap: nowrap;
+}
+#tb__contact .contact__icon {
+    flex: 0 0 60px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(42, 167, 201, 0.15);
+}
+html.is_dark #tb__contact .contact__icon { background: rgba(42, 167, 201, 0.2); }
+#tb__contact .contact__icon svg {
+    width: 25px;
+    height: 25px;
+    flex-shrink: 0;
+    fill: var(--primaryColor);
+    color: var(--primaryColor);
+}
+#tb__contact .contact__text {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+#tb__contact .contact__text h6 { margin-bottom: 8px; }
+#tb__contact .contact__text p {
+    margin-bottom: 4px;
+    word-break: break-word;
+}
+ 
+@media (max-width: 767px) {
+    #tb__contact .contact__info { gap: 22px; }
     #tb__contact .contact__icon {
-        flex: 0 0 60px;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255, 255, 255, 0.08);
+        flex-basis: 50px;
+        width: 50px;
+        height: 50px;
     }
-
     #tb__contact .contact__icon svg {
-        width: 25px;
-        height: 25px;
-        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
     }
+}
+@media (max-width: 400px) {
+    #tb__contact .contact__single__item { flex-wrap: wrap; }
+    #tb__contact .contact__icon { margin-bottom: 6px; }
+}
+ 
+/* ---------- Images ---------- */
+.herobanner__img img, .about__img__3 img, .about__img__wrapper img,
+.project__img img, .team__member__img img, .contact__img img, .service__img img {
+    max-width: 100%;
+    height: 70%;
+}
+.offcanvas__header--menu__open--btn svg {
+    color: var(--primaryColor);
+}
+.sticky .headerarea__main__menu nav ul li a, .headerarea__transparent .mobile__log--title, .headerarea__solid .headerarea__main__menu nav ul li a, .headerarea__solid .mobile__log--title {
+    color: var(--whiteColor) !important;
+}
+/* ============== CONTACT SECTION: light / white ==============
+   Paste at the VERY END of your <style> block (after skillup-theme.css and header.css)
+   so it overrides the earlier dark-slate rules. Dark mode still works because
+   every colour below is a theme variable that flips under .is_dark. */
 
-    #tb__contact .contact__text {
-        flex: 1 1 auto;
-        min-width: 0;
-    }
+/* Section background (also overrides the inline pink + image background) */
+#tb__contact.contact {
+    background: var(--bodyBg) !important;
+}
 
-    #tb__contact .contact__text h6 {
-        margin-bottom: 8px;
-    }
+/* Headings */
+#tb__contact h1, #tb__contact h2, #tb__contact h3,
+#tb__contact h4, #tb__contact h5, #tb__contact h6 {
+    color: var(--headingColor) !important;
+}
 
-    #tb__contact .contact__text p {
-        margin-bottom: 4px;
-        word-break: break-word;
-    }
+/* Body text, links, labels */
+#tb__contact p,
+#tb__contact li,
+#tb__contact a,
+#tb__contact .contact__text,
+#tb__contact span:not(.text__gradient) {
+    color: var(--contentColor) !important;
+}
+#tb__contact .text__gradient {
+    color: var(--primaryColor) !important;
+    -webkit-text-fill-color: var(--primaryColor);
+}
+#tb__contact .contact__text p.text-muted {
+    color: #8A94A0 !important;
+}
 
-    /* Responsive tweaks */
-    @media (max-width: 767px) {
-        #tb__contact .contact__info {
-            gap: 22px;
-        }
+/* Form fields: light grey boxes with a thin border */
+#tb__contact input,
+#tb__contact textarea,
+#tb__contact select,
+#tb__contact .contact__common__input {
+    background: var(--pinkcolor) !important;
+    border: 1px solid var(--borderColor2) !important;
+    color: var(--blackColor) !important;
+    border-radius: var(--borderRadius2);
+}
+#tb__contact input::placeholder,
+#tb__contact textarea::placeholder {
+    color: #7B8794 !important;
+    opacity: 1;
+}
+#tb__contact input:focus,
+#tb__contact textarea:focus,
+#tb__contact select:focus {
+    outline: 0;
+    border-color: var(--primaryColor) !important;
+    box-shadow: 0 0 0 3px rgba(42, 167, 201, 0.18);
+}
 
-        #tb__contact .contact__icon {
-            flex-basis: 50px;
-            width: 50px;
-            height: 50px;
-        }
+/* Contact info icons: soft teal circle, teal icon (overrides the green SVG gradients) */
+#tb__contact .contact__icon {
+    background: var(--pinkcolor) !important;
+}
+#tb__contact .contact__icon svg path {
+    fill: var(--primaryColor) !important;
+}
 
-        #tb__contact .contact__icon svg {
-            width: 20px;
-            height: 20px;
-        }
-    }
+/* Alerts stay readable */
+#tb__contact .alert-success { color: #0f5132 !important; }
+#tb__contact .alert-danger,
+#tb__contact .alert-danger li { color: #842029 !important; }
 
-    @media (max-width: 400px) {
-        #tb__contact .contact__single__item {
-            flex-wrap: wrap;
-        }
-
-        #tb__contact .contact__icon {
-            margin-bottom: 6px;
-        }
-    }
-    .herobanner__img img, .about__img__3 img, .about__img__wrapper img, .project__img img, .team__member__img img, .contact__img img, .service__img img{
-        max-width: 100%;
-        height: 70%;
-            
-    }
+/* Send button */
+#tb__contact .default__button {
+    background: var(--primaryColor);
+    border-color: var(--primaryColor);
+    color: #fff !important;
+}
+#tb__contact .default__button:hover {
+    background: var(--blackColor);
+    border-color: var(--blackColor);
+}
+#tb__contact .contact__icon svg.contact__svg,
+#tb__contact .contact__icon svg.contact__svg * {
+    fill: none !important;
+    stroke: var(--primaryColor) !important;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+ 
     </style>
 
     <script>
@@ -230,23 +399,23 @@
 <body class="body__wrapper">
 
     <!-- pre loader area start -->
-    <div id="back__preloader">
+    <!-- <div id="back__preloader">
         <div id="back__circle_loader"></div>
         <div class="back__loader_logo">
             <img loading="lazy" src="{{ asset('website/img/pre.png') }}" alt="Preload">
         </div>
-    </div>
+    </div> -->
     <!-- pre loader area end -->
 
     <!-- Dark/Light area start -->
-    <div class="mode_switcher my_switcher">
+    <!-- <div class="mode_switcher my_switcher">
         <button id="light--to-dark-button" class="light align-items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="ionicon dark__mode" viewBox="0 0 512 512"><path d="M160 136c0-30.62 4.51-61.61 16-88C99.57 81.27 48 159.32 48 248c0 119.29 96.71 216 216 216 88.68 0 166.73-51.57 200-128-26.39 11.49-57.38 16-88 16-119.29 0-216-96.71-216-216z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
             <svg xmlns="http://www.w3.org/2000/svg" class="ionicon light__mode" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M256 48v48M256 416v48M403.08 108.92l-33.94 33.94M142.86 369.14l-33.94 33.94M464 256h-48M96 256H48M403.08 403.08l-33.94-33.94M142.86 142.86l-33.94-33.94"/><circle cx="256" cy="256" r="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32"/></svg>
             <span class="light__mode">Light</span>
             <span class="dark__mode">Dark</span>
         </button>
-    </div>
+    </div> -->
     <!-- Dark/Light area end -->
 
     <main class="main_wrapper overflow-hidden">
@@ -272,9 +441,7 @@
                                         <ul>
                                             <li><a href="{{ url('/#tb__home') }}">HOME</a></li>
                                             <li><a href="{{ url('/#tb__about') }}">ABOUT</a></li>
-                                            <li><a href="{{ url('/#tb__service') }}">SERVICE</a></li>
-                                            <li><a href="{{ url('/#tb__projects') }}">PROJECTS</a></li>
-                                            <li><a href="{{ url('/#tb__pricing') }}">PRICING</a></li>
+                                           
                                             <li><a href="{{ url('/#tb__contact') }}">CONTACT</a></li>
                                         </ul>
                                     </nav>
@@ -354,10 +521,7 @@
                     <ul class="offcanvas__menu_ul">
                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__home') }}">HOME</a></li>
                          <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__about') }}">ABOUT</a></li>
-                        <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__service') }}">SERVICE</a></li>
-                        <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__projects') }}">PROJECTS</a></li>
                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__contact') }}">CONTACT</a></li>
-                        <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ url('/#tb__pricing') }}">PRICING</a></li>
                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ route('vacancies.public.index') }}">CAREERS</a></li>
 
                     </ul>
@@ -404,15 +568,13 @@
 
                         <div class="col-xl-2 col-lg-6 col-md-6 col-sm-6" data-aos="fade-up" data-aos-duration="2000">
                             <div class="footer__widget footer__support">
-                                <div class="footer__menu__title"><h6>SUPPORT :</h6></div>
+                                <div class="footer__menu__title" style="color: #fff !important;"><h6>SUPPORT :</h6></div>
                                 <div class="footer__menu">
                                     <ul>
-                                        <li><a href="{{ url('/#tb__home') }}">Home</a></li>
-                                        <li><a href="{{ url('/#tb__about') }}">About us</a></li>
-                                        <li><a href="{{ url('/#tb__service') }}">Our services</a></li>                                        <li><a href="{{ url('/#tb__projects') }}">Projects</a></li>
-                                        <li><a href="{{ url('/#tb__pricing') }}">Pricing </a></li>
+                                        <li><a href="{{ url('/#tb__home') }}" style="color: #fff !important;">Home</a></li>
+                                        <li><a href="{{ url('/#tb__about') }}" style="color: #fff !important;">About us</a></li>
 
-                                        <li><a href="{{ route('vacancies.public.index') }}">Careers</a></li>
+                                        <li><a href="{{ route('vacancies.public.index') }}" style="color: #fff !important;">Careers</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -420,13 +582,13 @@
 
                         <div class="col-xl-2 col-lg-6 col-md-6 col-sm-6" data-aos="fade-up" data-aos-duration="2500">
                             <div class="footer__widget footer__quick">
-                                <div class="footer__menu__title"><h6>QUICK LINKS :</h6></div>
+                                <div class="footer__menu__title" style="color: #fff !important;"><h6>QUICK LINKS :</h6></div>
                                 <div class="footer__menu">
                                     <ul>
-                                        <li><a href="#">Privacy & policy</a></li>
-                                        <li><a href="#">Terms & conditions</a></li>
-                                        <li><a href="#contact">Customer support</a></li>
-                                        <li><a href="{{ url('/#tb__contact') }}">Contact us</a></li>
+                                        <li><a href="#" style="color: #fff !important;">Privacy & policy</a></li>
+                                        <li><a href="#" style="color: #fff !important;">Terms & conditions</a></li>
+                                        <li><a href="#contact" style="color: #fff !important;">Customer support</a></li>
+                                        <li><a href="{{ url('/#tb__contact') }}" style="color: #fff !important;">Contact us</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -434,13 +596,13 @@
 
                         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12" data-aos="fade-up" data-aos-duration="3000">
                             <div class="footer__widget footer__right">
-                                <div class="footer__menu__title"><h6>CONTACT :</h6></div>
+                                <div class="footer__menu__title" style="color: #fff !important;"><h6>CONTACT :</h6></div>
                                 <div class="footer__text">
                                     @if($appSetting->phone ?? false)
-                                        <p><i class="icofont-phone"></i> <a href="tel:{{ $appSetting->phone }}">{{ $appSetting->phone }}</a></p>
+                                        <p><i class="icofont-phone"></i> <a href="tel:{{ $appSetting->phone }}" style="color: #fff !important;">{{ $appSetting->phone }}</a></p>
                                     @endif
                                     @if($appSetting->email ?? false)
-                                        <p><i class="icofont-envelope"></i> <a href="mailto:{{ $appSetting->email }}">{{ $appSetting->email }}</a></p>
+                                        <p><i class="icofont-envelope"></i> <a href="mailto:{{ $appSetting->email }}" style="color: #fff !important;    ">{{ $appSetting->email }}</a></p>
                                     @endif
                                 </div>
                             </div>

@@ -21,6 +21,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\ProfileController;
 
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CoursePageController;
+use App\Http\Controllers\VocationalController;
+
+ 
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,7 +34,15 @@ use Illuminate\Support\Facades\Route;
 | Replace the default routes/web.php entirely with this file.
 |--------------------------------------------------------------------------
 */
+// routes/web.php
+Route::view('/trinity-selt-preparation', 'trinity-selt-preparation')->name('selt');
+// routes/web.php
+Route::view('/about-us', 'about-us')->name('about-us');
 
+Route::get('/courses/vocational-training', [VocationalController::class, 'index'])->name('vocational.index');
+Route::get('/courses/vocational-training/{category}', [VocationalController::class, 'show'])->name('vocational.show');
+
+Route::get('/courses/{slug}', [CoursePageController::class, 'show'])->name('courses.show');
 // ── Public website ────────────────────────────────────────────────────
 Route::get('/', fn () => view('front.home'))->name('home');
 Route::get('/services', [ServiceController::class, 'publicIndex'])->name('services.public.index');
@@ -38,8 +51,13 @@ Route::get('/vacancies', [PublicVacancyController::class, 'index'])->name('vacan
 Route::get('/vacancies/{vacancy:slug}', [PublicVacancyController::class, 'show'])->name('vacancies.public.show');
 Route::post('/vacancies/{vacancy:slug}/apply', [PublicVacancyController::class, 'apply'])->name('vacancies.public.apply');
 Route::post('/careers/apply', [PublicVacancyController::class, 'applyGeneral'])->name('vacancies.public.applyGeneral');
-Route::post('/contact', [PublicContactController::class, 'store'])->name('contact.store');
-
+Route::post('/contact', [ContactMessageController::class, 'store'])
+    ->middleware('throttle:5,1')          // max 5 submissions per minute per IP
+    ->name('contact.store');
+    Route::get('/applications/{application}/pdf', [PublicVacancyController::class, 'applicationPdf'])
+    ->name('vacancies.public.applicationPdf')
+    ->middleware('signed');
+ 
 // ── Floating assistant widget ──────────────────────────────────────
 Route::prefix('assistant')->name('assistant.')->group(function () {
     Route::post('ai', [AssistantController::class, 'ai'])->name('ai');
@@ -181,6 +199,10 @@ Route::middleware('auth')->group(function () {
             Route::post('live-chat/{uuid}/reply', [LiveChatController::class, 'reply'])->name('live-chat.reply');
             Route::post('live-chat/{uuid}/close', [LiveChatController::class, 'close'])->name('live-chat.close');
 
+// Courses management routes
+            Route::post('courses/reorder', [CourseController::class, 'reorder'])->name('courses.reorder');
+Route::post('courses/{course}/toggle-active', [CourseController::class, 'toggleActive'])->name('courses.toggleActive');
+Route::resource('courses', CourseController::class)->except('show');
         });
 
     });

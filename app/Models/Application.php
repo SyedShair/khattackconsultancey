@@ -19,7 +19,22 @@ class Application extends Model
         'phone',
         'resume',
         'cover_letter',
+        'current_location',
+        'highest_qualification',
+        'years_experience',
+        'right_to_work',
+        'requires_sponsorship',
+        'suitability',
+        'declaration_accepted',
+        'declaration_accepted_at',
         'status',
+    ];
+
+    protected $casts = [
+        'right_to_work'           => 'boolean',
+        'requires_sponsorship'    => 'boolean',
+        'declaration_accepted'    => 'boolean',
+        'declaration_accepted_at' => 'datetime',
     ];
 
     public const STATUSES = [
@@ -28,6 +43,21 @@ class Application extends Model
         'shortlisted' => 'Shortlisted',
         'rejected'    => 'Rejected',
         'hired'       => 'Hired',
+    ];
+
+    // Option lists used by the application form, validation and the PDF
+    public const QUALIFICATIONS = [
+        'masters'   => "Master's Degree",
+        'bachelors' => "Bachelor's Degree",
+        'phd'       => 'PhD',
+        'other'     => 'Other',
+    ];
+
+    public const EXPERIENCE = [
+        'lt1'   => 'Less than 1 year',
+        '1-3'   => '1-3 years',
+        '3-5'   => '3-5 years',
+        '5plus' => 'More than 5 years',
     ];
 
     public function vacancy(): BelongsTo

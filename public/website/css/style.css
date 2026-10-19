@@ -108,47 +108,47 @@
   --navyBlue2: #fff ;
 } */
 :root {
-  --bodyColor: #222222;
+  --bodyColor: #4A4F57;
   --bodyBg: #fff;
   --whiteColor: #ffffff;
-  --blackColor: #0A0624;
-  --blackBlue: #13201C;
-  --headingColor: #222222;
-  --contentColor: #5F6C76;
-  --primaryColor: #607570;
-  --secondaryColor: #3E5B54;
+  --blackColor: #1F2A44;          /* nav text, headings on white */
+  --blackBlue: #263244;           /* dark sections / overlays */
+  --headingColor: #1F2A44;
+  --contentColor: #4A4F57;
+  --primaryColor: #2AA7C9;        /* teal from the logo */
+  --secondaryColor: #303E52;      /* slate (Contact / footer background) */
   --greyColor: #EDEDED;
   --borderColor: #eeeeee;
-  --borderColor2: #D7E1DC;
+  --borderColor2: #D5E3EA;
   --borderColor3: #ccc;
-  --navyBlue: #3E5B54;
-  --navyBlue2: #2B3D37;
-  --pinkcolor: #EEF3F1;
-  --violet: #7C948E;
+  --navyBlue: #303E52;
+  --navyBlue2: #263244;
+  --pinkcolor: #EAF6FA;           /* light teal tint for soft backgrounds */
+  --violet: #6FC3DA;              /* lighter teal accent */
   --yellow: #C9A227;
-  --gradientColor: linear-gradient(90deg, #3E5B54 0%, #4F6B63 47.92%, #607570 100%);
-  --gradientColor2: linear-gradient(180deg, rgba(19, 32, 28, 0.00) 0%, #13201C 100%);
-  --gradientColor3: linear-gradient(90deg, #3E5B54 0%, rgba(255, 255, 255, 0.00) 100%);
+  --gradientColor: linear-gradient(90deg, #303E52 0%, #2A7F9C 47.92%, #2AA7C9 100%);
+  --gradientColor2: linear-gradient(180deg, rgba(38, 50, 68, 0.00) 0%, #263244 100%);
+  --gradientColor3: linear-gradient(90deg, #303E52 0%, rgba(255, 255, 255, 0.00) 100%);
   --borderRadius: 8px;
   --borderRadius2: 5px;
   --transition: .3s;
-  --bodyFont: "Inter", sans-serif;
-  --headingFont: "Inter", sans-serif;
-  --contentFont: "Inter", sans-serif;
-  --buttonFont: "Source Sans Pro";
+  --bodyFont: "Poppins", sans-serif;     /* the screenshot looks like Poppins */
+  --headingFont: "Poppins", sans-serif;
+  --contentFont: "Poppins", sans-serif;
+  --buttonFont: "Poppins", sans-serif;
 }
 
 .is_dark {
-  --bodyColor: #fff;
-  --bodyBg: #10201B;
+  --bodyColor: #E8ECF2;
+  --bodyBg: #151C2B;
   --headingColor: #fff;
-  --contentColor: #fff;
+  --contentColor: #E8ECF2;
   --blackColor: #fff;
-  --whiteColor: #10201B;
-  --borderColor: #2A3B35;
-  --borderColor2: #2E4038;
-  --darkShadow: 0 0 20px 5px rgba(96, 117, 112, 0.15);
-  --pinkcolor: #16221D;
+  --whiteColor: #1B2436;
+  --borderColor: #2A3548;
+  --borderColor2: #33405A;
+  --darkShadow: 0 0 20px 5px rgba(42, 167, 201, 0.15);
+  --pinkcolor: #1A2336;
   --blackBlue: #fff;
   --navyBlue2: #fff;
 }
@@ -2017,7 +2017,7 @@ button.default__button {
   font-size: 14px;
   padding: 33px 18px 37px;
   display: block;
-  color: var(--whiteColor);
+  color: var(--whiteColor) !important;
 }
 @media (min-width: 1366px) and (max-width: 1499px) {
   .headerarea__main__menu ul li a {

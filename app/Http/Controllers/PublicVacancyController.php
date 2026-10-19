@@ -6,9 +6,13 @@ use App\Mail\NewJobApplicationAdminMail;
 use App\Models\Application;
 use App\Models\User;
 use App\Models\Vacancy;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class PublicVacancyController extends Controller
 {
@@ -19,7 +23,7 @@ class PublicVacancyController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Vacancy::open()->latest();
+        $query = Vacancy::latest();
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
@@ -40,7 +44,7 @@ class PublicVacancyController extends Controller
 
     public function show(Vacancy $vacancy)
     {
-        abort_unless($vacancy->is_open, 404);
+        // abort_unless($vacancy->is_open, 404);
 
         return view('public.vacancies.show', compact('vacancy'));
     }
@@ -50,24 +54,56 @@ class PublicVacancyController extends Controller
      */
     public function apply(Request $request, Vacancy $vacancy)
     {
-        abort_unless($vacancy->is_open, 404);
+        // abort_unless($vacancy->is_open, 404);
 
         $validated = $request->validate([
-            'name'         => ['required', 'string', 'max:150'],
-            'email'        => ['required', 'email', 'max:150'],
-            'phone'        => ['required', 'string', 'max:30'],
-            'resume'       => ['required', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
-            'cover_letter' => ['nullable', 'string', 'max:5000'],
+            // 1. Personal details
+            'name'             => ['required', 'string', 'max:150'],
+            'email'            => ['required', 'email', 'max:150'],
+            'phone'            => ['required', 'string', 'max:30'],
+            'current_location' => ['required', 'string', 'max:150'],
+
+            // 2. Qualifications and experience
+            'highest_qualification' => ['required', Rule::in(array_keys(Application::QUALIFICATIONS))],
+            'years_experience'      => ['required', Rule::in(array_keys(Application::EXPERIENCE))],
+
+            // 3. Right to work
+            'right_to_work'        => ['required', 'in:yes,no'],
+            'requires_sponsorship' => ['required', 'in:yes,no'],
+
+            // 4. Supporting information (max 150 words)
+            'suitability' => ['nullable', 'string', 'max:2000', function ($attribute, $value, $fail) {
+                $words = preg_split('/\s+/u', trim((string) $value), -1, PREG_SPLIT_NO_EMPTY);
+                if (count($words) > 150) {
+                    $fail('Please keep this answer to 150 words or fewer.');
+                }
+            }],
+
+            // 5. CV
+            'resume' => ['required', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
+
+            // 6. Declaration
+            'declaration' => ['accepted'],
+        ], [
+            'declaration.accepted' => 'You must confirm the declaration to submit your application.',
         ]);
 
-        $validated['resume'] = $request->file('resume')->store('resumes', 'local');
-        $validated['vacancy_id'] = $vacancy->id;
+        $data = collect($validated)->except(['declaration', 'right_to_work', 'requires_sponsorship', 'resume'])->all();
 
-        $application = Application::create($validated);
+        $data['right_to_work']            = $validated['right_to_work'] === 'yes';
+        $data['requires_sponsorship']     = $validated['requires_sponsorship'] === 'yes';
+        $data['declaration_accepted']     = true;
+        $data['declaration_accepted_at']  = now();
+        $data['resume']                   = $request->file('resume')->store('resumes', 'local');
+        $data['vacancy_id']               = $vacancy->id;
+
+        $application = Application::create($data);
 
         $this->notifyNewApplication($application);
 
-        return back()->with('status', "Thanks {$validated['name']}, your application for \"{$vacancy->title}\" has been received.");
+        return back()
+            ->with('status', "Thanks {$validated['name']}, your application for \"{$vacancy->title}\" has been received.")
+            ->with('download_url', $this->pdfUrl($application));
     }
 
     /**
@@ -97,7 +133,39 @@ class PublicVacancyController extends Controller
 
         $this->notifyNewApplication($application);
 
-        return back()->with('status', "Thanks {$validated['name']}, we've received your details and will reach out if a suitable role opens up.");
+        return back()
+            ->with('status', "Thanks {$validated['name']}, we've received your details and will reach out if a suitable role opens up.")
+            ->with('download_url', $this->pdfUrl($application));
+    }
+
+    /**
+     * PDF copy of a submitted application. Reached only through the
+     * signed, short-lived link created right after submission.
+     * e.g. application-jane-doe-english-tutor.pdf
+     */
+    public function applicationPdf(Application $application)
+    {
+        $application->load('vacancy');
+
+        $filename = Str::slug(
+            'application ' . $application->name . ' ' . ($application->vacancy->title ?? 'general')
+        ) . '.pdf';
+
+        return Pdf::loadView('pdf.application', compact('application'))
+            ->setPaper('a4')
+            ->download($filename);
+    }
+
+    /**
+     * Signed link, valid for 10 minutes, no login required.
+     */
+    protected function pdfUrl(Application $application): string
+    {
+        return URL::temporarySignedRoute(
+            'vacancies.public.applicationPdf',
+            now()->addMinutes(10),
+            ['application' => $application->id]
+        );
     }
 
     /**

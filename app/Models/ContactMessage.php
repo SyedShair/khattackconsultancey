@@ -8,6 +8,7 @@ use App\Traits\LogsActivity;
 class ContactMessage extends Model
 {
     use LogsActivity;
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -16,6 +17,11 @@ class ContactMessage extends Model
         'subject',
         'message',
         'status',
+        'attachments',
+    ];
+
+    protected $casts = [
+        'attachments' => 'array',
     ];
 
     public const STATUSES = [
