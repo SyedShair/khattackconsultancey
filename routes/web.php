@@ -84,9 +84,12 @@ Route::middleware('auth')->group(function () {
 
     // Any authenticated user (not just admins) can manage their own profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
+Route::post('/profile/info', [ProfileController::class, 'updateInfo'])->name('profile.updateInfo');
+Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.updateAvatar');
+Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
     // Admin-only: user + role + permission + settings + recruitment management
+// Profile (any authenticated user)
+
     Route::middleware('role:admin')->group(function () {
 
         Route::get('users', [UserController::class, 'index'])->name('users.index');
